@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:ignore="HardcodedText" >
+
+    <data>
+        <variable
+            name="vm"
+            type="com.snd.app.ui.management.pest.ManagementPestViewModel" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:paddingTop="10dp"
+        android:background="@color/white">
+
+        <View
+            android:id="@+id/management_pest_header"
+            style="@style/headerStyle"
+            android:background="@color/white"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/write_back"
+            style="@style/image_btn"
+            android:layout_marginStart="10dp"
+            android:onClick="@{()->vm.back()}"
+            app:layout_constraintBottom_toBottomOf="@id/management_pest_header"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@id/management_pest_header"
+            app:srcCompat="@drawable/ic_back_24" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            style="@style/headerTextStyle"
+            android:text="병해정보 입력"
+            android:textColor="@color/cocoa_brown"
+            app:layout_constraintBottom_toBottomOf="@id/management_pest_header"
+            app:layout_constraintEnd_toEndOf="@id/management_pest_header"
+            app:layout_constraintStart_toStartOf="@id/management_pest_header"
+            app:layout_constraintTop_toTopOf="@id/management_pest_header"/>
+
+        <!--내용 부분-->
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            app:layout_constraintTop_toBottomOf="@id/management_pest_header"
+            app:layout_constraintBottom_toBottomOf="parent">
+
+            <androidx.core.widget.NestedScrollView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:fillViewport="true"
+                android:overScrollMode="never"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="1.0">
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:id="@+id/bt_management_pest_add"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginRight="10dp"
+                        android:layout_marginTop="10dp"
+                        android:background="@drawable/rectangle_white_2"
+                        android:drawableTop="@drawable/ic_write"
+                        android:fontFamily="@font/notosans_kr_bold"
+                        android:padding="10dp"
+                        android:text="병충해 추가하기"
+                        android:textColor="@color/cocoa_brown"
+                        android:textSize="15dp"
+                        android:gravity="center"
+                        app:drawableTint="@color/cocoa_brown"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintVertical_bias="0.0" />
+                    
+                    <TextView
+                        android:id="@+id/no_pest_text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="등록된 내역이 없습니다."
+                        android:textSize="20dp"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        android:visibility="gone"/>
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/management_pest_info"
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        android:padding="10dp"
+                        android:overScrollMode="never"
+                        app:layout_constraintTop_toBottomOf="@+id/bt_management_pest_add"
+                        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                        tools:listitem="@layout/item_pest_info"
+                        tools:ignore="MissingConstraints" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+            </androidx.core.widget.NestedScrollView>
+        </androidx.constraintlayout.widget.ConstraintLayout>
+        <!--./내용 부분-->
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

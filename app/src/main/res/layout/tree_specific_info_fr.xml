@@ -1,0 +1,229 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    class="com.snd.app.MainActBinding"
+    tools:ignore="MissingDefaultResource">
+
+    <data>
+        <import type="android.view.View" />
+
+        <variable
+            name="TreeSpecificInfoVM"
+            type="com.snd.app.ui.map.TreeSpecificInfoViewModel" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <!--Topbar-->
+        <View
+            android:id="@+id/tree_specific_header"
+            android:background="@color/white"
+            android:elevation="0dp"
+            style="@style/headerStyle"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/write_back"
+            style="@style/image_btn"
+            android:layout_marginStart="10dp"
+            android:onClick="@{()->TreeSpecificInfoVM.setBack()}"
+            app:layout_constraintBottom_toBottomOf="@id/tree_specific_header"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@id/tree_specific_header"
+            app:srcCompat="@drawable/ic_back_24" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/title"
+            style="@style/headerTextStyle"
+            android:elevation="0dp"
+            android:text="수목 상세 정보"
+            android:textColor="@color/cocoa_brown"
+            app:layout_constraintStart_toStartOf="@id/tree_specific_header"
+            app:layout_constraintTop_toTopOf="@id/tree_specific_header"
+            app:layout_constraintBottom_toBottomOf="@id/tree_specific_header"
+            app:layout_constraintEnd_toEndOf="@id/tree_specific_header" />
+        <!--./Topbar-->
+
+
+        <!--스크롤뷰-->
+        <androidx.core.widget.NestedScrollView
+            android:id="@+id/tree_specific_info_scroll_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fillViewport="true"
+            android:padding="15dp"
+            android:overScrollMode="never"
+            app:layout_constraintTop_toBottomOf="@+id/tree_specific_header"
+            tools:ignore="MissingConstraints">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/tree_specific_info_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/border_my"
+                android:elevation="10dp"
+                android:padding="10dp">
+
+                <FrameLayout
+                    android:id="@+id/tree_frameLayout"
+                    android:layout_width="0dp"
+                    android:layout_height="100dp"
+                    app:layout_constraintStart_toStartOf="@+id/tree_specific_info_nfc_tv"
+                    app:layout_constraintHorizontal_bias="0.0"
+                    app:layout_constraintVertical_bias="0.0">
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/tree_specific_info_rv_image"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="horizontal"
+                        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                        tools:listitem="@layout/image_item" />
+
+                    <TextView
+                        android:id="@+id/no_image_text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:text="등록된 이미지가 없습니다."
+                        android:visibility="gone" />
+                </FrameLayout>
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/tree_specific_info_nfc_tv"
+                    style="@style/tree_info_label"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="NFC 일련번호"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/tree_frameLayout" />
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/tree_specific_info_nfc"
+                    style="@style/tree_info_edt"
+                    android:text="@{TreeSpecificInfoVM.NFC}"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintStart_toStartOf="@id/tree_specific_info_nfc_tv"
+                    app:layout_constraintTop_toBottomOf="@+id/tree_specific_info_nfc_tv" />
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/tree_specific_info_scarlet_diam_tv"
+                    style="@style/tree_info_label"
+                    android:layout_marginTop="10dp"
+                    android:layout_height="wrap_content"
+                    android:text="수목명"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/tree_specific_info_nfc" />
+
+                <androidx.appcompat.widget.AppCompatEditText
+                    android:id="@+id/tree_specific_info_scarlet_diam"
+                    style="@style/tree_info_edt"
+                    android:longClickable="false"
+                    android:nextFocusDown="@id/tr_height"
+                    android:paddingEnd="50dp"
+                    android:hint="등록된 데이터가 없습니다."
+                    android:text="@{TreeSpecificInfoVM.species}"
+                    app:layout_constraintEnd_toEndOf="@id/tree_specific_info_scarlet_diam_tv"
+                    app:layout_constraintStart_toStartOf="@id/tree_specific_info_scarlet_diam_tv"
+                    app:layout_constraintTop_toBottomOf="@id/tree_specific_info_scarlet_diam_tv" />
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/tree_specific_info_tr_height_label"
+                    style="@style/tree_info_label"
+                    android:layout_marginTop="10dp"
+                    android:text="조사자"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/tree_specific_info_scarlet_diam" />
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/tree_specific_info_tr_height"
+                    style="@style/tree_info_edt"
+                    android:inputType="numberDecimal"
+                    android:longClickable="false"
+                    android:nextFocusDown="@id/tr_height"
+                    android:paddingEnd="50dp"
+                    android:text="@{TreeSpecificInfoVM.submitter}"
+                    app:layout_constraintEnd_toEndOf="@id/tree_specific_info_tr_height_label"
+                    app:layout_constraintStart_toStartOf="@id/tree_specific_info_tr_height_label"
+                    app:layout_constraintTop_toBottomOf="@id/tree_specific_info_tr_height_label" />
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/tree_specific_info_crw_diam_tv"
+                    style="@style/tree_info_label"
+                    android:layout_marginTop="10dp"
+                    android:text="조사업체"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/tree_specific_info_tr_height" />
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/tree_specific_info_crw_height"
+                    style="@style/tree_info_edt"
+                    android:inputType="numberDecimal"
+                    android:longClickable="false"
+                    android:nextFocusDown="@id/crw_diam"
+                    android:paddingEnd="50dp"
+                    android:text="@{TreeSpecificInfoVM.vendor}"
+                    app:layout_constraintEnd_toEndOf="@id/tree_specific_info_crw_diam_tv"
+                    app:layout_constraintStart_toStartOf="@id/tree_specific_info_crw_diam_tv"
+                    app:layout_constraintTop_toBottomOf="@id/tree_specific_info_crw_diam_tv" />
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/tree_specific_info_crw_diam"
+                    style="@style/tree_info_label"
+                    android:layout_marginTop="10dp"
+                    android:text="정보 생성 일자"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/tree_specific_info_crw_height" />
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/tree_specific_info_tr_vendor"
+                    style="@style/tree_info_edt"
+                    android:completionThreshold="0"
+                    android:longClickable="false"
+                    android:text="@{TreeSpecificInfoVM.basicInserted}"
+                    app:layout_constraintEnd_toEndOf="@id/tree_specific_info_crw_diam"
+                    app:layout_constraintStart_toStartOf="@id/tree_specific_info_crw_diam"
+                    app:layout_constraintTop_toBottomOf="@id/tree_specific_info_crw_diam" />
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/tr_hashtag_tv"
+                    style="@style/tree_info_label2"
+                    android:layout_marginTop="10dp"
+                    android:text="#비고"
+                    android:visibility="gone"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/tree_specific_info_tr_vendor" />
+
+                <com.google.android.flexbox.FlexboxLayout
+                    xmlns:android="http://schemas.android.com/apk/res/android"
+                    android:id="@+id/flexbox_layout"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginRight="10dp"
+                    app:alignContent="flex_start"
+                    app:alignItems="flex_start"
+                    app:flexDirection="row"
+                    app:flexWrap="wrap"
+                    app:layout_constraintTop_toBottomOf="@id/tr_hashtag_tv"
+                    app:layout_constraintStart_toStartOf="@id/tr_hashtag_tv"
+                    app:layout_constraintEnd_toEndOf="@id/tr_hashtag_tv"
+                    tools:ignore="MissingConstraints" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </androidx.core.widget.NestedScrollView>
+        <!--./ 스크롤뷰-->
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

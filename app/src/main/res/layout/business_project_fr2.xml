@@ -1,0 +1,380 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:ignore="HardcodedText, SpUsage">
+
+    <data>
+        <variable
+            name="vm"
+            type="com.snd.app.ui.business.ProjectViewModel" />
+    </data>
+
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="15dp">
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/business_project_img"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_marginStart="10dp"
+            android:src="@drawable/ic_diagram_project"
+            app:layout_constraintEnd_toStartOf="@id/business_project_name"
+            app:layout_constraintStart_toStartOf="parent"
+            tools:ignore="MissingConstraints" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/business_project_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:textSize="20dp"
+            android:textColor="@color/cocoa_brown"
+            android:text="@string/company_format"
+            android:fontFamily="@font/notosans_kr_bold"
+            app:layout_constraintStart_toEndOf="@id/business_project_img"
+            app:layout_constraintTop_toTopOf="parent" />
+
+
+        <!--정보박스-->
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/business_project_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="24dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginEnd="24dp"
+            android:background="@drawable/rectangle_white_5"
+            android:elevation="5dp"
+            android:paddingStart="20dp"
+            android:paddingEnd="20dp"
+            app:layout_constraintTop_toBottomOf="@id/business_project_name">
+
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/guideline"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layout_constraintGuide_percent="0.3" />
+
+<!--세트 1-->
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/business_project_index_tr"
+                style="@style/labelTextStyle"
+                android:layout_marginTop="10dp"
+                android:text="사업 연번"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/guideline"
+                tools:ignore="MissingConstraints" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/business_project_index"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text=""
+                android:textSize="20dp"
+                android:background="@drawable/border_gray_background"
+                app:layout_constraintStart_toEndOf="@+id/guideline"
+                app:layout_constraintEnd_toEndOf="parent"
+                tools:ignore="MissingConstraints" />
+
+            <View
+                android:id="@+id/divider1"
+                android:layout_width="match_parent"
+                android:layout_height="0.1dp"
+                android:layout_marginTop="10dp"
+                android:background="#ACACAC"
+                app:layout_constraintTop_toBottomOf="@id/business_project_index" />
+
+<!--세트 2-->
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/business_project_company_tr"
+                style="@style/labelTextStyle"
+                android:layout_marginTop="10dp"
+                android:text="사업명"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/guideline"
+                app:layout_constraintTop_toBottomOf="@id/divider1"
+                tools:ignore="MissingConstraints" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/business_project_company"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text=""
+                android:textSize="20dp"
+                android:background="@drawable/border_gray_background"
+                app:layout_constraintStart_toEndOf="@+id/guideline"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/divider1"
+                tools:ignore="MissingConstraints" />
+
+            <View
+                android:id="@+id/divider2"
+                android:layout_width="match_parent"
+                android:layout_height="0.1dp"
+                android:layout_marginTop="10dp"
+                android:background="#ACACAC"
+                app:layout_constraintTop_toBottomOf="@id/business_project_company" />
+
+<!--세트 3-->
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/business_project_business_tr"
+                style="@style/labelTextStyle"
+                android:layout_marginTop="10dp"
+                android:text="담당 업체명"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/guideline"
+                app:layout_constraintTop_toBottomOf="@id/divider2"
+                tools:ignore="MissingConstraints" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/business_project_business"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text=""
+                android:textSize="20dp"
+                android:background="@drawable/border_gray_background"
+                app:layout_constraintStart_toEndOf="@+id/guideline"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/divider2"
+                tools:ignore="MissingConstraints" />
+
+            <View
+                android:id="@+id/divider3"
+                android:layout_width="match_parent"
+                android:layout_height="0.1dp"
+                android:layout_marginTop="10dp"
+                android:background="#ACACAC"
+                app:layout_constraintTop_toBottomOf="@id/business_project_business" />
+
+<!--세트 4-->
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/business_project_details_tr"
+                style="@style/labelTextStyle"
+                android:layout_marginTop="10dp"
+                android:text="사업설명"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/guideline"
+                app:layout_constraintTop_toBottomOf="@id/divider3"
+                tools:ignore="MissingConstraints" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/business_project_details"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text=""
+                android:lines="2"
+                android:textSize="20dp"
+                android:background="@drawable/border_gray_background"
+                app:layout_constraintStart_toEndOf="@+id/guideline"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/divider3"
+                tools:ignore="MissingConstraints" />
+
+            <View
+                android:id="@+id/divider4"
+                android:layout_width="match_parent"
+                android:layout_height="0.1dp"
+                android:layout_marginTop="10dp"
+                android:background="#ACACAC"
+                app:layout_constraintTop_toBottomOf="@id/business_project_details" />
+
+<!--세트 5-->
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/business_project_area_tr"
+                style="@style/labelTextStyle"
+                android:layout_marginTop="10dp"
+                android:text="위치"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/guideline"
+                app:layout_constraintTop_toBottomOf="@id/divider4"
+                tools:ignore="MissingConstraints" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/business_project_area"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text=""
+                android:textSize="20dp"
+                android:background="@drawable/border_gray_background"
+                app:layout_constraintStart_toEndOf="@+id/guideline"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/divider4"
+                tools:ignore="MissingConstraints" />
+
+            <View
+                android:id="@+id/divider5"
+                android:layout_width="match_parent"
+                android:layout_height="0.1dp"
+                android:layout_marginTop="10dp"
+                android:background="#ACACAC"
+                app:layout_constraintTop_toBottomOf="@id/business_project_area" />
+
+<!--세트 6-->
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/business_project_cost_tr"
+                style="@style/labelTextStyle"
+                android:layout_marginTop="10dp"
+                android:text="사업비"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/guideline"
+                app:layout_constraintTop_toBottomOf="@id/divider5"
+                tools:ignore="MissingConstraints" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/business_project_cost"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text=""
+                android:textSize="20dp"
+                android:background="@drawable/border_gray_background"
+                app:layout_constraintStart_toEndOf="@+id/guideline"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/divider5"
+                tools:ignore="MissingConstraints" />
+
+            <View
+                android:id="@+id/divider6"
+                android:layout_width="match_parent"
+                android:layout_height="0.1dp"
+                android:layout_marginTop="10dp"
+                android:background="#ACACAC"
+                app:layout_constraintTop_toBottomOf="@id/business_project_cost" />
+
+<!--세트 7-->
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/business_project_manager_tr"
+                style="@style/labelTextStyle"
+                android:layout_marginTop="10dp"
+                android:text="담당자"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/guideline"
+                app:layout_constraintTop_toBottomOf="@id/divider6"
+                tools:ignore="MissingConstraints" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/business_project_manager"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text=""
+                android:textSize="20dp"
+                android:background="@drawable/border_gray_background"
+                app:layout_constraintStart_toEndOf="@+id/guideline"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/divider6"
+                tools:ignore="MissingConstraints" />
+
+            <View
+                android:id="@+id/divider7"
+                android:layout_width="match_parent"
+                android:layout_height="0.1dp"
+                android:layout_marginTop="10dp"
+                android:background="#ACACAC"
+                app:layout_constraintTop_toBottomOf="@id/business_project_manager" />
+
+<!--세트 8-->
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/business_project_status_tr"
+                style="@style/labelTextStyle"
+                android:layout_marginTop="10dp"
+                android:text="진행상황"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/guideline"
+                app:layout_constraintTop_toBottomOf="@id/divider7"
+                tools:ignore="MissingConstraints" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/business_project_status"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text=""
+                android:textSize="20dp"
+                android:background="@drawable/border_gray_background"
+                app:layout_constraintStart_toEndOf="@+id/guideline"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/divider7"
+                tools:ignore="MissingConstraints" />
+
+            <View
+                android:id="@+id/divider8"
+                android:layout_width="match_parent"
+                android:layout_height="0.1dp"
+                android:layout_marginTop="10dp"
+                android:background="#ACACAC"
+                app:layout_constraintTop_toBottomOf="@id/business_project_status" />
+
+<!--세트 8-->
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/business_project_start_tr"
+                style="@style/labelTextStyle"
+                android:layout_marginTop="10dp"
+                android:text="시작일자"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/guideline"
+                app:layout_constraintTop_toBottomOf="@id/divider8"
+                tools:ignore="MissingConstraints" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/business_project_start"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text=""
+                android:textSize="20dp"
+                android:background="@drawable/border_gray_background"
+                app:layout_constraintStart_toEndOf="@+id/guideline"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/divider8"
+                tools:ignore="MissingConstraints" />
+
+            <View
+                android:id="@+id/divider9"
+                android:layout_width="match_parent"
+                android:layout_height="0.1dp"
+                android:layout_marginTop="10dp"
+                android:background="#ACACAC"
+                app:layout_constraintTop_toBottomOf="@id/business_project_start" />
+
+<!--세트 9-->
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/business_project_termination_tr"
+                style="@style/labelTextStyle"
+                android:layout_marginTop="10dp"
+                android:text="종료일자"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/guideline"
+                app:layout_constraintTop_toBottomOf="@id/divider9"
+                tools:ignore="MissingConstraints" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/business_project_termination"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text=""
+                android:textSize="20dp"
+                android:background="@drawable/border_gray_background"
+                app:layout_constraintStart_toEndOf="@+id/guideline"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/divider9"
+                tools:ignore="MissingConstraints" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+        <!--./정보박스-->
+
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

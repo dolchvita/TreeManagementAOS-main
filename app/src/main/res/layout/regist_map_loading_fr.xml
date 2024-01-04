@@ -1,0 +1,258 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <variable
+            name="mapLoadingVM"
+            type="com.snd.app.ui.write.MapLoadingViewModel"/>
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/white">
+
+        <!--카카오맵-->
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/loading_map_layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/white"
+            tools:ignore="MissingConstraints">
+
+            <RelativeLayout
+                android:id="@+id/loading_kakao_map"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:background="#BDBDBD"
+                android:gravity="center"
+                tools:ignore="MissingConstraints"/>
+
+            <!-- 상단바 -->
+            <View
+                android:id="@+id/map_info"
+                android:layout_width="match_parent"
+                android:layout_height="80dp"
+                android:background="@color/mustard_yellow"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <View
+                android:id="@+id/separator_line2"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/cocoa_brown_70"
+                app:layout_constraintTop_toBottomOf="@+id/map_info"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"/>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/loading_map_text_form"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingStart="10dp"
+                app:layout_constraintTop_toTopOf="@+id/map_info"
+                app:layout_constraintBottom_toBottomOf="@+id/map_info"
+                app:layout_constraintStart_toStartOf="@+id/map_loading_toggle_group">
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/accuracy_tv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/notosans_kr_medium"
+                    android:text="@string/오차범위"
+                    android:textSize="16sp"
+                    android:textColor="@drawable/selector_toggle_text"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintBottom_toTopOf="@id/satellite_tv"/>
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/accuracy"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:fontFamily="@font/notosans_kr_medium"
+                    android:textColor="@drawable/selector_toggle_text"
+                    android:textSize="16sp"
+                    android:text="@{mapLoadingVM.accuracy}"
+                    app:layout_constraintBottom_toBottomOf="@id/accuracy_tv"
+                    app:layout_constraintStart_toEndOf="@id/accuracy_tv"
+                    app:layout_constraintTop_toTopOf="@id/accuracy_tv"/>
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/satellite_tv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/notosans_kr_medium"
+                    android:text="@string/위성수"
+                    android:textSize="16sp"
+                    android:textColor="@drawable/selector_toggle_text"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/accuracy_tv" />
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/satellite"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:fontFamily="@font/notosans_kr_medium"
+                    android:textColor="@drawable/selector_toggle_text"
+                    android:textSize="18sp"
+                    android:text="@{mapLoadingVM.satellite}"
+                    app:layout_constraintBottom_toBottomOf="@id/satellite_tv"
+                    app:layout_constraintStart_toEndOf="@id/satellite_tv"
+                    app:layout_constraintTop_toTopOf="@id/satellite_tv" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+            <!-- ./상단바 -->
+
+
+            <!--지도 모드 버튼-->
+            <com.google.android.material.button.MaterialButtonToggleGroup
+                android:id="@+id/map_loading_toggle_group"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="12dp"
+                android:layout_marginTop="12dp"
+                app:checkedButton="@id/map_loading_normal"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/map_info"
+                app:selectionRequired="true"
+                app:singleSelection="true">
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/map_loading_normal"
+                    style="@style/toggleStyle"
+                    android:layout_width="70dp"
+                    android:layout_height="wrap_content"
+                    android:backgroundTint="@drawable/selector_toggle"
+                    android:text="@string/일반"
+                    android:onClick="@{()->mapLoadingVM.setMapTypeToNormal()}"
+                    android:textColor="@drawable/selector_toggle_text"
+                    app:autoSizeMaxTextSize="14dp"
+                    app:autoSizeMinTextSize="10dp"
+                    app:autoSizeStepGranularity="2sp"
+                    app:autoSizeTextType="uniform"
+                    app:strokeColor="@color/cocoa_brown_70"/>
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/map_loading_satellite"
+                    style="@style/toggleStyle"
+                    android:layout_width="70dp"
+                    android:layout_height="wrap_content"
+                    android:backgroundTint="@drawable/selector_toggle"
+                    android:onClick="@{()->mapLoadingVM.setMapTypeToHybrid()}"
+                    android:text="@string/위성"
+                    android:textColor="@drawable/selector_toggle_text"
+                    app:autoSizeMaxTextSize="14dp"
+                    app:autoSizeMinTextSize="8dp"
+                    app:autoSizeStepGranularity="2sp"
+                    app:autoSizeTextType="uniform"
+                    app:strokeColor="@color/cocoa_brown_70"
+                    android:checkable="true"
+                    tools:checkable="false"/>
+
+            </com.google.android.material.button.MaterialButtonToggleGroup>
+            <!--./지도 모드 버튼-->
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/bt_pinned"
+                style="@style/toggleStyle"
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:layout_marginEnd="12dp"
+                android:text="@string/위치고정"
+                android:backgroundTint="@drawable/selector_toggle"
+                android:textColor="@drawable/selector_toggle_text"
+                android:onClick="@{()->mapLoadingVM.setPinnedBt()}"
+                app:autoSizeStepGranularity="2sp"
+                app:autoSizeTextType="uniform"
+                app:strokeColor="@color/cocoa_brown_70"
+                app:layout_constraintTop_toBottomOf="@id/map_info"
+                app:layout_constraintEnd_toEndOf="parent"
+                tools:checkable="false"/>
+
+            <RelativeLayout
+                android:id="@+id/loading_layout_box"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="#00000000"
+                android:gravity="center"
+                tools:layout_editor_absoluteX="0dp"
+                tools:layout_editor_absoluteY="0dp">
+
+                <LinearLayout
+                    android:id="@+id/loading_layout"
+                    android:layout_width="350dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="-200dp"
+                    android:background="@drawable/border_background"
+                    android:orientation="vertical"
+                    android:padding="10dp">
+
+                    <ProgressBar
+                        android:id="@+id/progress"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center" />
+
+                    <TextView
+                        android:id="@+id/tv1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginTop="5dp"
+                        android:text="@string/로딩메시지"
+                        android:textColor="@android:color/black" />
+                </LinearLayout>
+            </RelativeLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <!--버튼박스-->
+        <LinearLayout
+            android:id="@+id/mapLoading_button_layout"
+            android:background="@color/white"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:layout_marginTop="8dp"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            android:padding="10dp"
+            app:layout_constraintEnd_toEndOf="parent">
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/mapLoading_save"
+                style="@style/primary_button_1"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_marginEnd="4dp"
+                android:layout_weight="1"
+                android:text="@string/취소"
+                android:background="@drawable/button_cancle"
+                android:onClick="@{()->mapLoadingVM.setBack()}"
+                app:layout_constraintEnd_toStartOf="@id/mapLoading_cancel"
+                app:layout_constraintStart_toStartOf="parent" />
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/mapLoading_cancel"
+                style="@style/primary_button_1"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_marginStart="4dp"
+                android:layout_weight="1"
+                android:text="@string/저장"
+                android:background="@drawable/button_regist"
+                android:onClick="@{()->mapLoadingVM.save()}"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/mapLoading_save" />
+        </LinearLayout>
+        <!--./버튼박스-->
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

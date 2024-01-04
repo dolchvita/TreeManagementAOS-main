@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:ignore="HardcodedText, SpUsage">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/tree_management_history_info_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/border_my"
+        android:layout_marginBottom="20dp"
+        android:padding="10dp">
+
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tree_management_history_nfc_tv"
+            style="@style/tree_info_label"
+            android:layout_marginTop="20dp"
+            android:text="대상 수목"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            tools:ignore="MissingConstraints" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tree_management_history_nfc"
+            style="@style/tree_info_edt"
+            android:text=""
+            app:layout_constraintEnd_toEndOf="@id/tree_management_history_nfc_tv"
+            app:layout_constraintStart_toStartOf="@id/tree_management_history_nfc_tv"
+            app:layout_constraintTop_toBottomOf="@id/tree_management_history_nfc_tv" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tree_management_history_business_tv"
+            style="@style/tree_info_label"
+            android:layout_marginTop="20dp"
+            android:text="분류"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tree_management_history_nfc"
+            tools:ignore="MissingConstraints" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tree_management_history_business"
+            style="@style/tree_info_edt"
+            android:text=""
+            app:layout_constraintEnd_toEndOf="@id/tree_management_history_business_tv"
+            app:layout_constraintStart_toStartOf="@id/tree_management_history_business_tv"
+            app:layout_constraintTop_toBottomOf="@id/tree_management_history_business_tv" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tree_management_history_operation_date_tv"
+            style="@style/tree_info_label"
+            android:layout_marginTop="20dp"
+            android:text="시행일시"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tree_management_history_business"
+            tools:ignore="MissingConstraints" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tree_management_history_operation_date"
+            style="@style/tree_info_edt"
+            android:text=""
+            app:layout_constraintEnd_toEndOf="@id/tree_management_history_operation_date_tv"
+            app:layout_constraintStart_toStartOf="@id/tree_management_history_operation_date_tv"
+            app:layout_constraintTop_toBottomOf="@id/tree_management_history_operation_date_tv" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

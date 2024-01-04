@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:ignore="HardcodedText, SpUsage">
+
+    <!-- ManagementPestInfoAdapter 참조 -->
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/tree_pest_info_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="20dp"
+        android:background="@drawable/border_my"
+        android:padding="10dp"
+        android:paddingLeft="30dp"
+        android:paddingRight="30dp">
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tree_pest_info_species_tv"
+            style="@style/tree_info_label"
+            android:layout_marginTop="20dp"
+            android:text="수종"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            tools:ignore="MissingConstraints"/>
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tree_pest_info_species"
+            style="@style/tree_info_edt"
+            app:layout_constraintEnd_toEndOf="@id/tree_pest_info_species_tv"
+            app:layout_constraintStart_toStartOf="@id/tree_pest_info_species_tv"
+            app:layout_constraintTop_toBottomOf="@id/tree_pest_info_species_tv"/>
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tree_pest_info_name_tv"
+            style="@style/tree_info_label"
+            android:layout_marginTop="20dp"
+            android:text="병충해명"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tree_pest_info_species"
+            tools:ignore="MissingConstraints"/>
+
+        <Spinner
+            android:id="@+id/tree_pest_info_name_spinner"
+            style="@style/tree_info_edt"
+            android:background="@drawable/spinner_border"
+            android:textColor="@color/cocoa_brown"
+            app:layout_constraintEnd_toEndOf="@id/tree_pest_info_name_tv"
+            app:layout_constraintStart_toStartOf="@id/tree_pest_info_name_tv"
+            app:layout_constraintTop_toBottomOf="@id/tree_pest_info_name_tv"/>
+
+        <androidx.appcompat.widget.AppCompatEditText
+            android:id="@+id/tree_pest_info_name"
+            style="@style/tree_info_edt"
+            app:layout_constraintEnd_toEndOf="@id/tree_pest_info_name_tv"
+            app:layout_constraintStart_toStartOf="@id/tree_pest_info_name_tv"
+            app:layout_constraintTop_toBottomOf="@id/tree_pest_info_name_spinner" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tree_pest_info_occurred_tv"
+            style="@style/tree_info_label"
+            android:layout_marginTop="20dp"
+            android:text="발생일"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tree_pest_info_name"
+            tools:ignore="MissingConstraints"/>
+
+        <androidx.appcompat.widget.AppCompatEditText
+            android:id="@+id/tree_pest_info_register_occurred"
+            style="@style/tree_info_edt"
+            android:completionThreshold="0"
+            android:longClickable="false"
+            android:hint="발생일을 선택해주세요."
+            app:layout_constraintEnd_toEndOf="@id/tree_pest_info_occurred_tv"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintEnd_toStartOf="@+id/bt_occurred"
+            app:layout_constraintStart_toStartOf="@id/tree_pest_info_occurred_tv"
+            app:layout_constraintTop_toBottomOf="@id/tree_pest_info_occurred_tv"/>
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/bt_occurred"
+            android:layout_width="wrap_content"
+            android:layout_height="50dp"
+            android:text="날짜선택"
+            android:layout_marginTop="10dp"
+            app:layout_constraintTop_toBottomOf="@id/tree_pest_info_occurred_tv"
+            app:layout_constraintEnd_toEndOf="@+id/tree_pest_info_occurred_tv"
+            app:layout_constraintStart_toEndOf="@+id/tree_pest_info_register_occurred"
+            tools:ignore="MissingConstraints" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tree_pest_info_severity_tv"
+            style="@style/tree_info_label"
+            android:layout_marginTop="24dp"
+            android:text="심각도"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.51"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tree_pest_info_register_occurred"
+            tools:ignore="MissingConstraints" />
+
+        <Spinner
+            android:id="@+id/tree_pest_info_severity_spinner"
+            style="@style/tree_info_edt"
+            android:background="@drawable/spinner_border"
+            android:textColor="@color/cocoa_brown"
+            app:layout_constraintEnd_toEndOf="@id/tree_pest_info_severity_tv"
+            app:layout_constraintStart_toStartOf="@id/tree_pest_info_severity_tv"
+            app:layout_constraintTop_toBottomOf="@id/tree_pest_info_severity_tv"/>
+
+        <androidx.appcompat.widget.AppCompatEditText
+            android:id="@+id/tree_pest_info_severity"
+            style="@style/tree_info_edt"
+            app:layout_constraintEnd_toEndOf="@id/tree_pest_info_severity_spinner"
+            app:layout_constraintStart_toStartOf="@id/tree_pest_info_severity_spinner"
+            app:layout_constraintTop_toBottomOf="@id/tree_pest_info_severity_spinner"/>
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tree_pest_info_recovered_tv"
+            style="@style/tree_info_label"
+            android:layout_marginTop="20dp"
+            android:visibility="gone"
+            android:text="완치일"
+            app:layout_constraintTop_toBottomOf="@id/tree_pest_info_severity"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            tools:ignore="MissingConstraints"/>
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tree_pest_info_recovered"
+            style="@style/tree_info_edt"
+            android:completionThreshold="0"
+            android:longClickable="false"
+            android:visibility="gone"
+            app:layout_constraintEnd_toEndOf="@id/tree_pest_info_recovered_tv"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="@id/tree_pest_info_recovered_tv"
+            app:layout_constraintTop_toBottomOf="@id/tree_pest_info_recovered_tv"/>
+
+        <!--버튼-->
+        <android.widget.LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="10dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tree_pest_info_recovered"
+            tools:ignore="MissingConstraints">
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/pest_write_save"
+                style="@style/primary_button_1"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="4dp"
+                android:layout_weight="1"
+                android:text="수정하기"
+                android:background="@drawable/button_regist"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+        </android.widget.LinearLayout>
+        <!--./버튼-->
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

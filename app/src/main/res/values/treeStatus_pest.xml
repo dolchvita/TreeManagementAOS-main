@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string-array name="treeStatus_pest">
+        <item>없음 X</item>
+        <item>있음 O</item>
+    </string-array>
+
+    <string-array name="treeStatus_creation">
+        <item>나무 조성 일자</item>
+        <item>일자 선택</item>
+    </string-array>
+
+</resources>
+
+
+
+

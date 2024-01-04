@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shape xmlns:android="http://schemas.android.com/apk/res/android">
+    <solid android:color="#3478b5"/> <!-- 배경색 -->
+    <corners android:radius="7dp"/> <!-- 모서리 둥글게 조정 -->
+</shape>

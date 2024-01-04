@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:ignore="HardcodedText, SpUsage">
+
+    <data>
+        <variable
+            name="getTreeInfoVM"
+            type="com.snd.app.ui.read.GetTreeInfoViewModel" />
+    </data>
+
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/read_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/white">
+
+        <View
+            android:id="@+id/read_header"
+            style="@style/headerStyle"
+            android:layout_marginTop="24dp"
+            android:background="@color/white"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <Spinner
+            android:id="@+id/read_sipnner"
+            style="@style/tree_info_edt"
+            android:layout_marginRight="10dp"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:onItemSelected="@{getTreeInfoVM::onItemSelected}"
+            android:background="@drawable/ic_bars"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="@id/read_header"
+            app:layout_constraintEnd_toEndOf="@id/read_header"
+            app:layout_constraintTop_toTopOf="@id/read_header" />
+
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/read_back"
+            style="@style/image_btn"
+            android:layout_marginStart="10dp"
+            app:layout_constraintBottom_toBottomOf="@id/read_header"
+            app:layout_constraintStart_toStartOf="parent"
+            android:onClick="@{()->getTreeInfoVM.setBack()}"
+            app:layout_constraintTop_toTopOf="@id/read_header"
+            app:srcCompat="@drawable/ic_back_24" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            style="@style/headerTextStyle"
+            android:text="@{getTreeInfoVM.readTitle}"
+            android:textColor="@color/cocoa_brown"
+            app:layout_constraintBottom_toBottomOf="@id/read_header"
+            app:layout_constraintEnd_toEndOf="@id/read_header"
+            app:layout_constraintStart_toStartOf="@id/read_header"
+            app:layout_constraintTop_toTopOf="@id/read_header"/>
+
+
+        <androidx.fragment.app.FragmentContainerView
+            android:id="@+id/read_content"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            app:layout_constraintVertical_bias="0.0"
+            tools:layout_editor_absoluteX="0dp"
+            android:background="@color/white"
+            app:layout_constraintTop_toBottomOf="@+id/read_header"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>

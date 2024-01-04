@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:ignore="HardcodedText, SpUsage">
+
+    <data>
+        <variable
+            name="vm"
+            type="com.snd.app.ui.management.TreeManagementMenuViewModel"/>
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="15dp">
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tree_management_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="24dp"
+            android:textSize="25dp"
+            android:textColor="@color/cocoa_brown"
+            android:text="수목 이력 관리 메뉴"
+            android:fontFamily="@font/notosans_kr_bold"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"/>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/user_info_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/rectangle_white_5"
+            android:elevation="5dp"
+            android:layout_marginTop="15dp"
+            android:layout_marginStart="24dp"
+            android:layout_marginEnd="20dp"
+            android:paddingStart="20dp"
+            android:paddingEnd="20dp"
+            app:layout_constraintStart_toStartOf="@+id/tree_management_name"
+            app:layout_constraintTop_toBottomOf="@id/tree_management_name"
+            tools:ignore="MissingConstraints">
+
+            <!--병충해 메뉴-->
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/management_pest_layout"
+                android:background="@color/purple_200"
+                android:onClick="@{()->vm.setClick()}"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintStart_toStartOf="@+id/tree_pest_view"
+                app:layout_constraintEnd_toEndOf="@+id/tree_pest_view">
+
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:id="@+id/tree_management_img"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_marginStart="10dp"
+                    android:src="@drawable/ic_biohazard"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toStartOf="@id/tree_management_menu"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"/>
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/tree_management_menu"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginTop="15dp"
+                    android:layout_marginEnd="10dp"
+                    android:layout_marginBottom="15dp"
+                    android:textSize="18dp"
+                    android:textColor="@color/cocoa_brown"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toEndOf="@id/tree_management_img"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintHorizontal_weight="5"
+                    android:fontFamily="@font/notosans_kr_bold"
+                    app:layout_constraintEnd_toStartOf="@id/tree_management_menu_detail"
+                    android:text="병해정보"/>
+
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:id="@+id/tree_management_menu_detail"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_arrow_right"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    android:layout_marginEnd="10dp"/>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+            <!--./병충해 메뉴-->
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/tree_pest_view"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:overScrollMode="never"
+                tools:listitem="@layout/item_management_menu"
+                app:layout_constraintTop_toBottomOf="@+id/management_pest_layout"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"/>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

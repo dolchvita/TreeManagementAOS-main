@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    class="com.snd.app.MainActBinding">
+
+    <data>
+        <variable
+            name="vm"
+            type="com.snd.app.ui.management.TreeManagementViewModel" />
+    </data>
+
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".MainActivity">
+
+        <View
+            android:id="@+id/tree_management_header"
+            android:background="@color/white"
+            android:elevation="0dp"
+            android:text="수목 관리 시스템"
+            style="@style/headerStyle"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"/>
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/tree_management_back"
+            style="@style/image_btn"
+            android:layout_marginStart="10dp"
+            android:onClick="@{()->vm.back()}"
+            app:layout_constraintTop_toTopOf="@id/tree_management_header"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toBottomOf="@id/tree_management_header"
+            app:srcCompat="@drawable/ic_back_24"/>
+
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/title"
+            style="@style/headerTextStyle"
+            android:elevation="0dp"
+            android:text="@{vm.registTitle}"
+            android:textColor="@color/cocoa_brown"
+            app:layout_constraintStart_toStartOf="@id/tree_management_header"
+            app:layout_constraintTop_toTopOf="@id/tree_management_header"
+            app:layout_constraintBottom_toBottomOf="@id/tree_management_header"
+            app:layout_constraintEnd_toEndOf="@id/tree_management_header"/>
+
+
+        <androidx.fragment.app.FragmentContainerView
+            android:id="@+id/tree_management_content"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            app:layout_constraintVertical_bias="0.0"
+            tools:layout_editor_absoluteX="0dp"
+            android:background="@color/white"
+            app:layout_constraintTop_toBottomOf="@+id/tree_management_header"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"/>
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

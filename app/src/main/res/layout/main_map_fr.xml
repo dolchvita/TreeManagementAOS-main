@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:ignore="HardcodedText, SpUsage">
+
+    <data>
+        <variable
+            name="mapVM"
+            type="com.snd.app.ui.map.MapViewModel" />
+    </data>
+
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <RelativeLayout
+            android:id="@+id/main_kakao_map"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="#BDBDBD"
+            android:gravity="center"
+            android:text="지도"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.0" />
+
+        <ProgressBar
+            android:id="@+id/progress"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+        <!--지도 모드 버튼-->
+        <com.google.android.material.button.MaterialButtonToggleGroup
+            android:id="@+id/map_loading_toggle_group"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="12dp"
+            android:layout_marginTop="12dp"
+            app:checkedButton="@id/map_loading_normal"
+            app:layout_constraintStart_toStartOf="parent"
+            app:selectionRequired="true"
+            app:singleSelection="true"
+            tools:ignore="MissingConstraints">
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/map_loading_normal"
+                style="@style/toggleStyle"
+                android:layout_width="70dp"
+                android:layout_height="wrap_content"
+                android:backgroundTint="@drawable/selector_toggle"
+                android:text="일반"
+                android:onClick="@{()->mapVM.setMapTypeToNormal()}"
+                android:textColor="@drawable/selector_toggle_text"
+                app:autoSizeMaxTextSize="14dp"
+                app:autoSizeMinTextSize="10dp"
+                app:autoSizeStepGranularity="2sp"
+                app:autoSizeTextType="uniform"
+                app:strokeColor="@color/cocoa_brown_70" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/map_loading_satellite"
+                style="@style/toggleStyle"
+                android:layout_width="70dp"
+                android:layout_height="wrap_content"
+                android:backgroundTint="@drawable/selector_toggle"
+                android:onClick="@{()->mapVM.setMapTypeToHybrid()}"
+                android:text="위성"
+                android:textColor="@drawable/selector_toggle_text"
+                app:autoSizeMaxTextSize="14dp"
+                app:autoSizeMinTextSize="8dp"
+                app:autoSizeStepGranularity="2sp"
+                app:autoSizeTextType="uniform"
+                app:strokeColor="@color/cocoa_brown_70"
+                tools:checkable="false" />
+
+        </com.google.android.material.button.MaterialButtonToggleGroup>
+        <!--./지도 모드 버튼-->
+
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

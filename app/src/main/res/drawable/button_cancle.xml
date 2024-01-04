@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- 버튼이 눌렸을 때의 색상 및 스타일 -->
+    <item android:state_pressed="true">
+        <shape>
+            <solid android:color="@color/white"/> <!-- 눌렸을 때의 색상 -->
+            <corners android:radius="10dp"/> <!-- 모서리 반지름 -->
+        </shape>
+    </item>
+    <!-- 기본 버튼의 색상 및 스타일 -->
+    <item>
+        <shape>
+            <solid android:color="#E5E5E5"/> <!-- 기본 색상 -->
+            <corners android:radius="10dp"/> <!-- 모서리 반지름 -->
+        </shape>
+    </item>
+</selector>

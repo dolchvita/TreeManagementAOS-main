@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:ignore="HardcodedText, SpUsage">
+
+    <data>
+        <variable
+            name="vm"
+            type="com.snd.app.data.camera.CameraPreviewDialogViewModel" />
+    </data>
+
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        style="@style/FullScreenDialog">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/camera_preview_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <!--카메라 실행시 보여지는 프리뷰-->
+        <androidx.camera.view.PreviewView
+            android:id="@+id/camera_preview"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            tools:layout_editor_absoluteX="20dp"
+            tools:layout_editor_absoluteY="20dp" />
+
+        <android.widget.LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            tools:ignore="MissingConstraints">
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/bt_take_photo"
+                style="@style/toggleStyle"
+                android:padding="10dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:layout_marginEnd="12dp"
+                android:text="사진 촬영"
+                android:textSize="20dp"
+                android:onClick="@{() -> vm.takePhoto()}"
+                android:backgroundTint="@drawable/selector_toggle"
+                android:textColor="@drawable/selector_toggle_text"
+                android:layout_gravity="center_horizontal"
+                tools:checkable="false" />
+        </android.widget.LinearLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <!-- Image Preview -->
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/image_preview_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:visibility="gone"
+        tools:ignore="MissingConstraints">
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/image_preview"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintVertical_bias="0.0" />
+
+        <android.widget.LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="10dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            tools:ignore="MissingConstraints">
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/bt_image_cancel"
+                style="@style/primary_button_2"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_marginEnd="4dp"
+                android:layout_weight="1"
+                android:background="#44000000"
+                android:text="다시 시도"
+                app:layout_constraintEnd_toStartOf="@id/bt_image_save"
+                app:layout_constraintStart_toStartOf="parent" />
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/bt_image_save"
+                style="@style/primary_button_2"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_marginStart="4dp"
+                android:layout_weight="1"
+                android:background="#44000000"
+                android:text="확인"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/bt_image_cancel"
+                app:layout_constraintTop_toTopOf="parent" />
+        </android.widget.LinearLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+    <!-- ./Image Preview -->
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

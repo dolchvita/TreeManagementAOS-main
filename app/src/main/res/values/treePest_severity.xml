@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="treePest_severity">
+        <item>낮음</item>
+        <item>중간</item>
+        <item>높음</item>
+        <item>긴급</item>
+        <item>완치 (일 선택)</item>
+    </string-array>
+</resources>

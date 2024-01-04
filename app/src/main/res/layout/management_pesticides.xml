@@ -1,0 +1,223 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:ignore="HardcodedText" >
+
+    <data>
+        <variable
+            name="vm"
+            type="com.snd.app.ui.management.write.RegisterPesticidesViewModel" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fitsSystemWindows="true"
+        android:background="@color/white" >
+
+        <androidx.core.widget.NestedScrollView
+            android:id="@+id/pesticides_scroll_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fillViewport="true"
+            android:overScrollMode="never"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintVertical_weight="3"
+            tools:ignore="MissingConstraints">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp">
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/pesticides_form"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/border_my"
+                    android:padding="10dp"
+                    tools:ignore="MissingConstraints">
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:id="@+id/pesticides_nfc_tv"
+                        style="@style/tree_info_label"
+                        android:layout_marginTop="12dp"
+                        android:text="일련번호"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintHorizontal_bias="0.0"
+                        app:layout_constraintStart_toStartOf="parent"
+                        tools:ignore="MissingConstraints" />
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:id="@+id/pesticides_nfc"
+                        style="@style/tree_info_edt"
+                        android:text="@{vm.nfc}"
+                        app:layout_constraintEnd_toEndOf="@id/pesticides_nfc_tv"
+                        app:layout_constraintHorizontal_bias="0.0"
+                        app:layout_constraintStart_toStartOf="@id/pesticides_nfc_tv"
+                        app:layout_constraintTop_toBottomOf="@id/pesticides_nfc_tv" />
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:id="@+id/pesticides_company_tv"
+                        style="@style/tree_info_label"
+                        android:layout_marginTop="12dp"
+                        android:text="시행업체"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintHorizontal_bias="0.0"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/pesticides_nfc" />
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:id="@+id/pesticides_company"
+                        style="@style/tree_info_edt"
+                        android:text="@{vm.pesticidesCompany}"
+                        app:layout_constraintEnd_toEndOf="@id/pesticides_company_tv"
+                        app:layout_constraintStart_toStartOf="@id/pesticides_company_tv"
+                        app:layout_constraintTop_toBottomOf="@id/pesticides_company_tv" />
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:id="@+id/pesticides_business_tv"
+                        style="@style/tree_info_label"
+                        android:layout_marginTop="10dp"
+                        android:text="진행 사업명"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/pesticides_company" />
+
+                    <Spinner
+                        android:id="@+id/pesticides_business"
+                        style="@style/tree_info_edt"
+                        android:textColor="@color/cocoa_brown"
+                        android:background="@drawable/spinner_border"
+                        android:onItemSelected="@{vm::onCompanyItemSelected}"
+                        app:layout_constraintEnd_toEndOf="@id/pesticides_business_tv"
+                        app:layout_constraintStart_toStartOf="@id/pesticides_business_tv"
+                        app:layout_constraintTop_toBottomOf="@id/pesticides_business_tv" />
+
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:id="@+id/pesticides_operator_tv"
+                        style="@style/tree_info_label"
+                        android:layout_marginTop="12dp"
+                        android:text="작업자"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintHorizontal_bias="0.0"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/pesticides_business" />
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:id="@+id/pesticides_operator"
+                        style="@style/tree_info_edt"
+                        android:text="@{vm.pesticidesOperator}"
+                        app:layout_constraintEnd_toEndOf="@id/pesticides_operator_tv"
+                        app:layout_constraintStart_toStartOf="@id/pesticides_operator_tv"
+                        app:layout_constraintTop_toBottomOf="@id/pesticides_operator_tv" />
+
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:id="@+id/pesticides_tv"
+                        style="@style/tree_info_label"
+                        android:layout_marginTop="12dp"
+                        android:text="병충해 방제 내용"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintHorizontal_bias="0.0"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/pesticides_operator" />
+
+                    <androidx.appcompat.widget.AppCompatEditText
+                        android:id="@+id/pesticides"
+                        style="@style/tree_info_edt"
+                        android:inputType="textMultiLine"
+                        android:lines="2"
+                        android:hint="내용 입력"
+                        app:layout_constraintEnd_toEndOf="@id/pesticides_tv"
+                        app:layout_constraintStart_toStartOf="@id/pesticides_tv"
+                        app:layout_constraintTop_toBottomOf="@id/pesticides_tv" />
+
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:id="@+id/pesticides_date_tv"
+                        style="@style/tree_info_label"
+                        android:layout_marginTop="12dp"
+                        android:text="작업일자"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintHorizontal_bias="0.0"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/pesticides" />
+
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:id="@+id/pesticides_date"
+                        style="@style/tree_info_edt"
+                        android:text="@{vm.pesticidesDate}"
+                        app:layout_constraintEnd_toEndOf="@id/pesticides_date_tv"
+                        app:layout_constraintStart_toStartOf="@id/pesticides_date_tv"
+                        app:layout_constraintTop_toBottomOf="@id/pesticides_date_tv" />
+
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:id="@+id/pesticides_note_tv"
+                        style="@style/tree_info_label"
+                        android:layout_marginTop="12dp"
+                        android:text="비고"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintHorizontal_bias="0.0"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/pesticides_date" />
+
+                    <androidx.appcompat.widget.AppCompatEditText
+                        android:id="@+id/pesticides_note"
+                        style="@style/tree_info_edt"
+                        android:inputType="text"
+                        android:hint="내용 입력"
+                        app:layout_constraintEnd_toEndOf="@id/pesticides_note_tv"
+                        app:layout_constraintStart_toStartOf="@id/pesticides_note_tv"
+                        app:layout_constraintTop_toBottomOf="@id/pesticides_note_tv" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <android.widget.LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="10dp"
+                    app:layout_constraintTop_toBottomOf="@id/pesticides_form"
+                    tools:ignore="MissingConstraints">
+
+                    <androidx.appcompat.widget.AppCompatButton
+                        android:id="@+id/pesticides_write_save"
+                        style="@style/primary_button_1"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_marginEnd="4dp"
+                        android:layout_weight="1"
+                        android:text="취 소"
+                        android:background="@drawable/button_cancle"
+                        android:onClick="@{()->vm.back()}"
+                        app:layout_constraintEnd_toStartOf="@id/pesticides_write_cancel"
+                        app:layout_constraintStart_toStartOf="parent" />
+
+                    <androidx.appcompat.widget.AppCompatButton
+                        android:id="@+id/pesticides_write_cancel"
+                        style="@style/primary_button_1"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_marginStart="4dp"
+                        android:layout_weight="1"
+                        android:text="저 장"
+                        android:background="@drawable/button_regist"
+                        android:onClick="@{()->vm.save()}"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toEndOf="@id/pesticides_write_save"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                </android.widget.LinearLayout>
+
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </androidx.core.widget.NestedScrollView>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>
