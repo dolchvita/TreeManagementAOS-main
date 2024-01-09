@@ -7,7 +7,7 @@
     <data>
         <variable
             name="vm"
-            type="com.snd.app.ui.business.ProjectViewModel" />
+            type="com.snd.app.repository.business.ProjectViewModel" />
     </data>
 
 

@@ -90,6 +90,7 @@ public class CameraPreviewDialogFragment extends TMDialogFragment {
 
 
         cameraManager.savedUri.observe(getActivity(), uri -> {
+            // 1-1) 사진을 찍고 uri 반환받기
             displayCapturedImageForReview(uri);
         });
 
@@ -112,7 +113,9 @@ public class CameraPreviewDialogFragment extends TMDialogFragment {
     }
 
 
+    // 촬영된 이미지 출력
     public void displayCapturedImageForReview(Uri imageUri) {
+        // uri 반환받으면, 이를 이용하여 화면에 표시하기 Glide 이용
         if (cameraPreviewDialogBinding != null && cameraPreviewDialogBinding.imagePreview != null) {
             ImageView image_preview = cameraPreviewDialogBinding.imagePreview; // 검토용 ImageView
             Glide.with(getActivity()).load(imageUri).into(image_preview);

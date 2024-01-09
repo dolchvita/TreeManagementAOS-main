@@ -1,4 +1,4 @@
-package com.snd.app.ui.business;
+package com.snd.app.repository.business;
 
 import android.util.Log;
 

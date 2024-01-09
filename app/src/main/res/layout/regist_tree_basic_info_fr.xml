@@ -331,9 +331,9 @@
                         android:layout_height="match_parent"
                         android:layout_marginStart="4dp"
                         android:layout_weight="1"
-                        android:text="등 록"
                         android:background="@drawable/button_regist"
                         android:onClick="@{()->treeBasicInfoVM.save()}"
+                        android:text="등 록"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toEndOf="@id/treeBasic_write_save"
                         app:layout_constraintTop_toTopOf="parent" />

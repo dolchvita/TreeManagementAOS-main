@@ -75,7 +75,7 @@ public class RegistTreeBasicInfoViewModel extends TMViewModel{
             _currentList.add(bitmap);
             currentList.setValue(_currentList);
         }
-        Log.d(TAG, "사진 추가됨 ** " + _currentList);
+        //Log.d(TAG, "사진 추가됨 ** " + _currentList);
         countText.setValue(_currentList.size());
     }
 

@@ -37,8 +37,7 @@
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="@+id/login_layout"
             app:layout_constraintBottom_toTopOf="@+id/login_layout"
-            app:layout_constraintVertical_bias="0.0"
-            tools:listitem="@layout/image_item" />
+            app:layout_constraintVertical_bias="0.0" />
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/title"

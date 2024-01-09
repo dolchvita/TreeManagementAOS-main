@@ -8,14 +8,13 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 
 import com.snd.app.common.TMActivity;
 import com.snd.app.data.dataUtil.BackPressListener;
 import com.snd.app.data.singleton.SharedPreferenceManager;
 import com.snd.app.databinding.MainActBinding;
-import com.snd.app.ui.business.BusinessFragment;
-import com.snd.app.ui.business.ProjectFragment;
+import com.snd.app.repository.business.BusinessFragment;
+import com.snd.app.repository.business.ProjectFragment;
 import com.snd.app.ui.home.HomeFragment;
 import com.snd.app.ui.login.LoginActivity;
 import com.snd.app.ui.map.Mapfragment;

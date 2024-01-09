@@ -1,8 +1,7 @@
-package com.snd.app.ui.business;
+package com.snd.app.repository.business;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
@@ -24,23 +23,14 @@ import androidx.lifecycle.ViewModelProvider;
 import com.snd.app.MainActivity;
 import com.snd.app.R;
 import com.snd.app.common.TMFragment;
-import com.snd.app.data.dataUtil.BackPressListener;
 import com.snd.app.data.dataUtil.FormatDataTime;
 import com.snd.app.data.singleton.SharedPreferenceManager;
 import com.snd.app.databinding.MainBusinessFrBinding;
-import com.snd.app.domain.company.ProjectDTO;
-import com.snd.app.ui.management.TreeManagementActivity;
-import com.snd.app.ui.management.write.RegisterMiscellaneousViewModel;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 
