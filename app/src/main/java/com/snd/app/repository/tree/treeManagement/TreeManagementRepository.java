@@ -20,7 +20,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import io.reactivex.Observer;
-import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 import retrofit2.Call;
@@ -48,7 +47,6 @@ public class TreeManagementRepository {
         TreeManagementService service = RetrofitClient.getInstance(Authorization).create(TreeManagementService.class);
         service.registerPruning(pruning)
                 .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Observer<Response<ResponseVO>>() {
                     @Override
                     public void onSubscribe(Disposable d) {
@@ -90,7 +88,6 @@ public class TreeManagementRepository {
         TreeManagementService service = RetrofitClient.getInstance(Authorization).create(TreeManagementService.class);
         service.registerDefoliation(defoliation)
                 .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Observer<Response<ResponseVO>>() {
                     @Override
                     public void onSubscribe(Disposable d) {
@@ -132,7 +129,6 @@ public class TreeManagementRepository {
         TreeManagementService service = RetrofitClient.getInstance(Authorization).create(TreeManagementService.class);
         service.registerPesticides(pesticides)
                 .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Observer<Response<ResponseVO>>() {
                     @Override
                     public void onSubscribe(Disposable d) {
@@ -173,7 +169,6 @@ public class TreeManagementRepository {
         TreeManagementService service = RetrofitClient.getInstance(Authorization).create(TreeManagementService.class);
         service.registerSurgery(surgery)
                 .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Observer<Response<ResponseVO>>() {
                     @Override
                     public void onSubscribe(Disposable d) {
@@ -214,7 +209,6 @@ public class TreeManagementRepository {
         TreeManagementService service = RetrofitClient.getInstance(Authorization).create(TreeManagementService.class);
         service.registerHorticulture(horticulture)
                 .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Observer<Response<ResponseVO>>() {
                     @Override
                     public void onSubscribe(Disposable d) {
@@ -255,7 +249,6 @@ public class TreeManagementRepository {
         TreeManagementService service = RetrofitClient.getInstance(Authorization).create(TreeManagementService.class);
         service.registerFertilization(fertilizatio)
                 .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Observer<Response<ResponseVO>>() {
                     @Override
                     public void onSubscribe(Disposable d) {
@@ -296,7 +289,6 @@ public class TreeManagementRepository {
         TreeManagementService service = RetrofitClient.getInstance(Authorization).create(TreeManagementService.class);
         service.registerMiscellaneous(miscellaneous)
                 .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Observer<Response<ResponseVO>>() {
                     @Override
                     public void onSubscribe(Disposable d) {

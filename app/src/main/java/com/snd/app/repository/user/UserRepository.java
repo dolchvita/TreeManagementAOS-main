@@ -104,6 +104,8 @@ public class UserRepository {
                     UserDTO userDTOData = gson.fromJson(jsonData, UserDTO.class);
                     userDTO.setValue(userDTOData);
 
+                    Log.d(TAG,"** userDTO ** " + userDTO);
+
                 }else {
                     try {
                         Log.d(TAG,"** 오류 / 응답 ** " + response.body());
@@ -162,65 +164,6 @@ public class UserRepository {
     }
 
 
-
-    /* ----------------------------------------------- UPDATE METHODS ----------------------------------------------- */
-
-    // 유저회원 정보 수정 by UserId
-    public LiveData<UserModifyInfoDTO> getUserModifyInfoDTO(){
-        return userModifyInfo;
-    }
-
-    public void  modifyBasicInfo(String authorization, UserModifyInfoDTO user){
-        UserService service = RetrofitClient.getInstance(authorization).create(UserService.class);
-
-        service.patchUserInfoByUserId(user)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Observer<Response<ResponseVO>>() {
-                    @Override
-                    public void onSubscribe(Disposable d) {
-                    }
-
-                    @Override
-                    public void onNext(Response<ResponseVO> response) {
-                        if (response.isSuccessful()) {
-                            Log.d(TAG, "** 성공 / 응답 ** " + response.body());
-                            Log.d(TAG, "** 성공 / 응답 ** " + response.toString());
-
-                            ResponseVO responseVO = response.body();
-                            String result=responseVO.getResult();
-                            String message=responseVO.getMessage();
-                            Object data=responseVO.getData();
-
-                            Gson gson = new Gson();
-                            String jsonData = gson.toJson(data);        // Object -> Json -> DTO
-                            UserModifyInfoDTO userModifyInfoDTO = gson.fromJson(jsonData, UserModifyInfoDTO.class);
-                            userModifyInfo.setValue(userModifyInfoDTO);
-
-                            Log.d(TAG, "** 결과 ** " + result);
-                            Log.d(TAG, "** 메모 ** " + message);
-
-                        } else {
-                            try {
-                                Log.d(TAG, "** 오류 / 응답 ** " + response.body());
-                                Log.d(TAG, "** 오류 / 응답 ** " + response.toString());
-                                Log.d(TAG, "** 오류 / 응답 ** " + response.errorBody().string());
-                                Log.d(TAG, "** 오류 / 응답 ** " + response);
-
-
-                            } catch (IOException e) {
-                                throw new RuntimeException(e);
-                            }
-                        }
-                    }
-                    @Override
-                    public void onError(Throwable e) {
-                    }
-                    @Override
-                    public void onComplete() {
-                    }
-                });
-    }
 
 
 }

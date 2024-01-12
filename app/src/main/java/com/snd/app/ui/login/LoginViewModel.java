@@ -31,14 +31,17 @@ public class LoginViewModel extends TMViewModel {
     public void loadCurrentApkInfo(){
         aosConfigUseCase.loadCurrentApkInfo();
     }
+
     public LiveData<String> getCurrentApkInfo(){
         return  aosConfigUseCase.getCurrentApkInfo();
     }
+
 
     // 현재 APK 다운로드 URL 가져오기
     public void loadCurrentDownloadLink(){
         aosConfigUseCase.loadCurrentDownloadLink();
     }
+
     public LiveData<String> getCurrentDownloadLink(){
         return  aosConfigUseCase.getCurrentDownloadLink();
     }
@@ -48,6 +51,7 @@ public class LoginViewModel extends TMViewModel {
     public void loadLoginRequest(UserCredentialsVO userCredentialsVO){
         loginUseCase.loadLoginRequest(userCredentialsVO);
     }
+
     public LiveData<String> getToken(){
         return loginUseCase.getToken();
     }
@@ -55,24 +59,33 @@ public class LoginViewModel extends TMViewModel {
 
     // 유효성 체크
     public void loadValidation(String Authorization){
+        log("토큰 " + Authorization);
         loginUseCase.loadValidation(Authorization);
     }
+
     public LiveData<String> getValidation(){
         return loginUseCase.getValidation();
     }
 
 
-    public LiveData<String> isLoginCheck(){
-        return loginUseCase.isLoginCheck();
-    }
-
-
     // 유저 확인
     public void loadUserDTO(String authorization, String userId){
+        log("유저 확인 " + userId);
         userUseCase.loadUserDTO(authorization, userId);
     }
+
     public LiveData<UserDTO> getUserDTO(){
         return userUseCase.getUserDTO();
+    }
+
+
+    /* ----------------------------------------------- Dispose ----------------------------------------------- */
+
+    // 리소스 해제
+    public void setDisposables(){
+        if(loginUseCase != null){
+            loginUseCase.setDisposables();
+        }
     }
 
 
@@ -81,6 +94,7 @@ public class LoginViewModel extends TMViewModel {
         super.onCleared();
         loginUseCase = null;
         userUseCase = null;
+        aosConfigUseCase = null;
     }
 
 

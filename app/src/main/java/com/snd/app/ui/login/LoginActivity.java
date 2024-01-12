@@ -28,17 +28,17 @@ import com.snd.app.ui.user.RegisterActivity;
 
 public class LoginActivity extends TMActivity {
     MainLoginBinding mainLoginBinding;
-    private String APK_VERSION = "1.0.8";
-    private AlertDialog.Builder alertDialogBuilder;
+    private String APK_VERSION = "1.0.8";       // 안드로이드 스튜디오 전역에서 참조 가능한 문자열이 있지 않을까? (xml, java)
+    AlertDialog dialog;
     SharedPreferenceManager sharedPreferenceManager;
     UserCredentialsVO userCredentialsVO;
     LoginViewModel loginVM;
+    AlertDialog.Builder alertDialogBuilder;
 
     EditText t_id;
     EditText t_pass;
     String token;
     String id;
-    String password;
     ImageView imageView;
     Bitmap bitmap;
     Button bt_login;
@@ -54,57 +54,70 @@ public class LoginActivity extends TMActivity {
         loginVM = new ViewModelProvider(this).get(LoginViewModel.class);
         mainLoginBinding.setLoginVM(loginVM);
         sharedPreferenceManager = SharedPreferenceManager.getInstance(getApplicationContext());
-        t_id = findViewById(R.id.id_input);
-        t_pass = findViewById(R.id.pass_input);
-        
+        alertDialogBuilder = new AlertDialog.Builder(this);
+        /* 로그인 화면 */
         bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.ic_login_logo);
         imageView = findViewById(R.id.login_image);
         imageView.setImageBitmap(bitmap);
+        /* 입력 데이터 */
+        t_id = mainLoginBinding.idInput;
+        t_pass = mainLoginBinding.passInput;
+        bt_login = mainLoginBinding.btLogin;
+        bt_register = mainLoginBinding.btRegister;
+
 
         if (checkAutoLogin()) {
             startActivity("MainActivity");
         }
 
-        bt_login = mainLoginBinding.btLogin;
-        bt_register = mainLoginBinding.btRegister;
-
-        bt_login.setOnClickListener((v) ->{
-            loginRequest();
-        });
 
         // AOS 앱 버전 정보 확인
         loginVM.loadCurrentApkInfo();
 
+
         loginVM.getCurrentApkInfo().observe(this, s -> {
-            log("??? ");
             if(!s.equals(APK_VERSION)){
                 loginVM.loadCurrentDownloadLink();
             }
         });
 
+
         loginVM.getCurrentDownloadLink().observe(this, s -> {
             popUpMessageToCurrentDownloadLink(s);
         });
+
+
+        bt_login.setOnClickListener((v) ->{
+            loginRequest();
+        });
+
 
         // 사용자 등록 버튼
         bt_register.setOnClickListener((v) ->{
             startActivity("RegisterActivity");
         });
 
+
+        // 로그인 시도 Callback
         loginVM.getToken().observe(this, s -> {
-            Log.d(TAG, "** 토큰 ** "+s);
+            log("로그인 시도 콜백 ** " + s);
             if(s.equals("fail")) {
-                Toast.makeText(this, "로그인 정보가 올바르지 않습니다.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "로그인 정보가 올바르지 않습니다.\n올바른 정보를 다시 입력하세요.", Toast.LENGTH_SHORT).show();
             }else {
                 validationCheckRequest(s);
             }
         });
 
+
+        // 토큰 유효성 Callback
         loginVM.getValidation().observe(this, s -> {
             loginVM.loadUserDTO(token, id);
         });
 
+
         loginVM.getUserDTO().observe(this, userDTO -> {
+            log("유저 콜백 ** " +userDTO);
+
             saveUserInfo(userDTO);
         });
 
@@ -119,18 +132,22 @@ public class LoginActivity extends TMActivity {
     }
 
 
+    // 로그인 요청
     public void loginRequest() {
         userCredentialsVO = new UserCredentialsVO();
         id = t_id.getText().toString();
-        password = t_pass.getText().toString();
+
         userCredentialsVO.setId(id);
-        userCredentialsVO.setPassword(password);
+        userCredentialsVO.setPassword(t_pass.getText().toString());
         loginVM.loadLoginRequest(userCredentialsVO);
     }
 
 
+    // 토큰 유효성 체크
     public void validationCheckRequest(String token){
+        this.token = token;
         loginVM.loadValidation(token);
+
         long currentTime = System.currentTimeMillis();
         if (sharedPreferenceManager != null){
             sharedPreferenceManager.saveString("token", token);
@@ -140,11 +157,10 @@ public class LoginActivity extends TMActivity {
 
 
     public void saveUserInfo(UserDTO user){
-        //Log.d(TAG, "** 넘어온 회원 ** "+user);
         if(sharedPreferenceManager != null){
             sharedPreferenceManager.saveString("company", user.getCompany());
             sharedPreferenceManager.saveString("name",user.getName());
-            sharedPreferenceManager.saveString("id",id);
+            sharedPreferenceManager.saveString("id",user.getId());
         }
         startActivity("MainActivity");
     }
@@ -162,7 +178,6 @@ public class LoginActivity extends TMActivity {
 
 
     void popUpMessageToCurrentDownloadLink(String url){
-        alertDialogBuilder = new AlertDialog.Builder(this);
         alertDialogBuilder.setTitle("수목관리 시스템이 업데이트 되었습니다.");
         alertDialogBuilder.setMessage("기존 앱 삭제 후 최신 버전으로 다운받으세요.");
         alertDialogBuilder.setNeutralButton("다운로드 바로가기", new DialogInterface.OnClickListener() {
@@ -173,6 +188,7 @@ public class LoginActivity extends TMActivity {
                 startActivity(i);
             }
         });
+
         alertDialogBuilder.setPositiveButton("확인", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
@@ -180,21 +196,22 @@ public class LoginActivity extends TMActivity {
                 System.exit(0);
             }
         });
+
         alertDialogBuilder.setNegativeButton("취소", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                finishAffinity();
-                System.exit(0);
             }
         });
-        AlertDialog dialog = alertDialogBuilder.create();
-        dialog.show();
+
+        if(dialog != null) {
+            dialog = alertDialogBuilder.create();
+            dialog.show();
+        }
     }
 
 
     @Override
     public void onBackPressed() {
-        alertDialogBuilder = new AlertDialog.Builder(this);
         alertDialogBuilder.setTitle("프로그램을 종료하시겠습니까?");
         alertDialogBuilder.setPositiveButton("확인", new DialogInterface.OnClickListener() {
             @Override
@@ -207,18 +224,30 @@ public class LoginActivity extends TMActivity {
             public void onClick(DialogInterface dialog, int which) {
             }
         });
-        AlertDialog dialog = alertDialogBuilder.create();
-        dialog.show();
+            dialog = alertDialogBuilder.create();
+            dialog.show();
+        //dismissDialog();
+    }
+
+
+    void dismissDialog(){
+        alertDialogBuilder.setOnDismissListener(new DialogInterface.OnDismissListener() {
+            @Override
+            public void onDismiss(DialogInterface dialogInterface) {
+                dialog = null;
+            }
+        });
     }
 
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        mainLoginBinding = null;
-        sharedPreferenceManager = null;
-        alertDialogBuilder = null;
-        userCredentialsVO = null;
+        loginVM.setDisposables();   //리소스 해제
+        if (dialog != null && dialog.isShowing()) {
+            dialog.dismiss();
+        }
+        mainLoginBinding = null;            // 바인딩 객체는 null할당하기
         imageView = null;
         bt_register = null;
         bt_login = null;

@@ -19,11 +19,8 @@ import com.snd.app.R;
 import com.snd.app.common.TMFragment;
 import com.snd.app.data.singleton.SharedPreferenceManager;
 import com.snd.app.ui.management.TreeManagementActivity;
-import com.snd.app.ui.read.GetTreeInfoActivity;
-import com.snd.app.ui.write.RegistTreeInfoActivity;
 
 import io.reactivex.Observable;
-import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
@@ -85,7 +82,6 @@ public class NfcReadingFragment extends TMFragment {
                                     return "success";
                                 }
                             })
-                            .observeOn(AndroidSchedulers.mainThread())
                             .subscribe(new Consumer<String>() {
                                 @Override
                                 public void accept(String result) throws Exception {

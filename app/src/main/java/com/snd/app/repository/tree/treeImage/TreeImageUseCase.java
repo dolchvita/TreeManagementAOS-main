@@ -1,5 +1,7 @@
 package com.snd.app.repository.tree.treeImage;
 
+import android.util.Log;
+
 import androidx.lifecycle.LiveData;
 
 import java.io.File;
@@ -21,6 +23,7 @@ public class TreeImageUseCase {
 
     //  수목 기본정보 이미지등록
     public void registerTreeImage(String Authorization, String tagId, List<File> currentFileList){
+        Log.d(TAG, "** ㅋ ** " + currentFileList);
         treeImageRepository.registerTreeImage(Authorization, tagId, currentFileList);
     }
 

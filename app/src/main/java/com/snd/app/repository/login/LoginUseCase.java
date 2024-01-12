@@ -16,9 +16,11 @@ public class LoginUseCase {
     public void loadLoginRequest(UserCredentialsVO userCredentialsVO){
         loginRepository.appLoginRequest(userCredentialsVO);
     }
+    /*
     public LiveData<String> isLoginCheck(){
         return loginRepository.loginCkeck;
     }
+     */
 
     public LiveData<String> getToken(){
         return loginRepository.token;
@@ -34,5 +36,13 @@ public class LoginUseCase {
     }
 
 
+    /* ----------------------------------------------- Dispose ----------------------------------------------- */
+
+    // 리소스 해제
+    public void setDisposables(){
+        if(loginRepository != null){
+            loginRepository.setDisposables();
+        }
+    }
 
 }

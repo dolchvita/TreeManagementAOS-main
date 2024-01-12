@@ -13,6 +13,7 @@ import java.io.IOException;
 
 import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 import okhttp3.ResponseBody;
@@ -28,10 +29,15 @@ public class LoginRepository {
     LoginService service;
     Retrofit retrofit;
 
-    public MutableLiveData<String> loginCkeck = new MutableLiveData<>();
+    //public MutableLiveData<String> loginCkeck = new MutableLiveData<>();
     public MutableLiveData<String> token = new MutableLiveData<>();
     private MutableLiveData<String> _validation = new MutableLiveData<>();
     public LiveData<String> validation = _validation;
+
+    private CompositeDisposable disposables = new CompositeDisposable();
+
+
+    /* ----------------------------------------------- POST METHODS ----------------------------------------------- */
 
     // 최초 로그인 요청
     public void appLoginRequest(UserCredentialsVO userCredentialsVO) {
@@ -48,6 +54,7 @@ public class LoginRepository {
                 .subscribe(new Observer<Response<ResponseVO>>() {
                     @Override
                     public void onSubscribe(Disposable d) {
+                        disposables.add(d);
                     }
                     @Override
                     public void onNext(Response<ResponseVO> response) {
@@ -57,13 +64,21 @@ public class LoginRepository {
                             ResponseVO responseVO = response.body();
                             Object data = responseVO.getData();
                             token.setValue(data.toString());
+
+                            Log.d(TAG, "** 토큰 시발 ** " + token.getValue());
+
                         } else {
                             try {
-                                Log.d(TAG, "** 오류 / 응답 ** " + response.body());
-                                Log.d(TAG, "** 오류 / 응답 ** " + response.toString());
-                                Log.d(TAG, "** 오류 / 응답 ** " + response.errorBody().string());
+                                Log.d(TAG, "** 오류 / 응답 ** " + response.body());     // null
+                                Log.d(TAG, "** 오류 / 응답 ? ** " + response.toString());
+                                Log.d(TAG, "** 오류 / 응답 ?? ** " + response.errorBody().string());    // {"result":"fail","message":"Invalid Id or Password","data":null}
                                 Log.d(TAG, "** 오류 / 응답 ** " + response);
-                                token.setValue("fail");
+
+                                String responseBody = response.errorBody().toString();
+
+                                Log.d(TAG, "** 바디 ** " + responseBody);
+
+                               // token.setValue("fail");
 
                             } catch (IOException e) {
                                 throw new RuntimeException(e);
@@ -82,6 +97,7 @@ public class LoginRepository {
     }
 
 
+    /* ----------------------------------------------- READ METHODS ----------------------------------------------- */
 
     public void validationCheckRequest(String Authorization){
         LoginService service = RetrofitClient.getInstance(Authorization).create(LoginService.class);
@@ -97,6 +113,8 @@ public class LoginRepository {
                     String responseVO = response.toString();    // 얘를 제이슨으로 만들면
                     Log.d(TAG, "** 지금 체크 중 **" + responseVO);
                     _validation.setValue(responseVO);
+
+                   //Log.d (TAG, "유효성 체크 " + _validation.getValue());
 
                 }else {
                     try {
@@ -116,6 +134,12 @@ public class LoginRepository {
         });
     }
 
+
+    public void setDisposables(){
+        if(disposables != null){
+            disposables.dispose();
+        }
+    }
 
 
 }

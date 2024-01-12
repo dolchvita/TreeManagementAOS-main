@@ -164,6 +164,7 @@ public class RegisterActivity extends TMActivity {
 
 
         AppCompatButton registerBt = mainRegisterActBinding.registerBt;
+
         CheckBox checkBox = mainRegisterActBinding.checkbox;
         checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override

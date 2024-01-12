@@ -41,6 +41,7 @@ public class RegistTreeInfoActivity extends TMActivity implements MapView.POIIte
     RegistTreeBasicInfoViewModel treeBasicInfoVM;
     RegistTreeBasicInfoFragment registTreeBasicInfoFr;
     AlertDialog.Builder builder;
+    AlertDialog dialog;
     CameraManager cameraManager;
     String submitter;
     String vendor;
@@ -74,8 +75,8 @@ public class RegistTreeInfoActivity extends TMActivity implements MapView.POIIte
 
 
     public void initMapLoadingFr(){
-        //getSupportFragmentManager().beginTransaction().replace(R.id.write_content, new MapLoadingFragment()).commit();
-        getSupportFragmentManager().beginTransaction().replace(R.id.write_content, registTreeBasicInfoFr).commit();
+        getSupportFragmentManager().beginTransaction().replace(R.id.write_content, new MapLoadingFragment()).commit();
+        //getSupportFragmentManager().beginTransaction().replace(R.id.write_content, registTreeBasicInfoFr).commit();
     }
 
 
@@ -92,10 +93,11 @@ public class RegistTreeInfoActivity extends TMActivity implements MapView.POIIte
     }
 
 
+    /*
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        // 갤러리 추가했을 때 결과 받는 메서드
+        // 갤러리 추가했을 때 결과 받는 메서드 - 무슨 갤러리??
 
         if (requestCode == REQUEST_GALLERY && resultCode == Activity.RESULT_OK && data != null) {
             Uri selectedImageUri = data.getData();
@@ -105,6 +107,8 @@ public class RegistTreeInfoActivity extends TMActivity implements MapView.POIIte
             treeBasicInfoVM.addImageList(bitmap);
         }
     }
+
+     */
 
 
     public void checkLocation(){
@@ -121,7 +125,7 @@ public class RegistTreeInfoActivity extends TMActivity implements MapView.POIIte
             public void onClick(DialogInterface dialog, int which) {
             }
         });
-        AlertDialog dialog = builder.create();
+        dialog = builder.create();
         dialog.show();
     }
 
@@ -138,7 +142,7 @@ public class RegistTreeInfoActivity extends TMActivity implements MapView.POIIte
         builder.setNegativeButton("취소", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                AlertDialog.Builder builder = new AlertDialog.Builder(RegistTreeInfoActivity.this);
+                builder = new AlertDialog.Builder(RegistTreeInfoActivity.this);
                 builder.setTitle("입력을 중단하시겠습니까?");
                 builder.setMessage("지금까지 진행 중인 내용만 저장됩니다.");
                 builder.setPositiveButton("확인", new DialogInterface.OnClickListener() {
@@ -157,7 +161,7 @@ public class RegistTreeInfoActivity extends TMActivity implements MapView.POIIte
                 dialog2.show();
             }
         });
-        AlertDialog dialog = builder.create();
+        dialog = builder.create();
         dialog.show();
     }
 
@@ -211,9 +215,13 @@ public class RegistTreeInfoActivity extends TMActivity implements MapView.POIIte
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        writeActBinding = null;
+        log("** 액티비티 - onDestroy 호출 **");
         registTreeBasicInfoFr = null;
+        writeActBinding = null;
         builder = null;
+        if(dialog != null) {
+            dialog.dismiss();
+        }
         if (cameraManager != null) {
             cameraManager.releaseResources();
         }

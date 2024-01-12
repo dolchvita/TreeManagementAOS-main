@@ -13,8 +13,8 @@ import com.snd.app.common.TMActivity;
 import com.snd.app.data.dataUtil.BackPressListener;
 import com.snd.app.data.singleton.SharedPreferenceManager;
 import com.snd.app.databinding.MainActBinding;
-import com.snd.app.repository.business.BusinessFragment;
-import com.snd.app.repository.business.ProjectFragment;
+import com.snd.app.ui.business.BusinessFragment;
+import com.snd.app.ui.business.ProjectFragment;
 import com.snd.app.ui.home.HomeFragment;
 import com.snd.app.ui.login.LoginActivity;
 import com.snd.app.ui.map.Mapfragment;
@@ -23,11 +23,12 @@ public class MainActivity extends TMActivity {
     MainActBinding mainActBinding;
     MainViewModel mainVM;
     private AlertDialog.Builder alertDialogBuilder;
+    // dialog;
     SharedPreferenceManager sharedPreferencesManager;
     ProjectFragment projectFragment;
     public AppCompatImageView backButton;   // 뒤로가기 버튼
     public boolean isNfcPermissionGranted = false;
-
+    AlertDialog dialog;
 
 
     @Override
@@ -66,7 +67,7 @@ public class MainActivity extends TMActivity {
                 public void onClick(DialogInterface dialog, int which) {
                 }
             });
-            AlertDialog dialog = alertDialogBuilder.create();
+            dialog = alertDialogBuilder.create();
             dialog.show();
         });
     }
@@ -108,15 +109,36 @@ public class MainActivity extends TMActivity {
                 public void onClick(DialogInterface dialog, int which) {
                 }
             });
-            AlertDialog dialog = alertDialogBuilder.create();
+            dialog = alertDialogBuilder.create();
             dialog.show();
         }
     }
 
 
+    void dismissDialog(){
+        if (alertDialogBuilder != null) {
+            alertDialogBuilder.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                @Override
+                public void onDismiss(DialogInterface dialogInterface) {
+                    dialog = null;
+                }
+            });
+        }
+    }
+
+
+
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        if (dialog != null && dialog.isShowing()) {
+            dialog.dismiss();
+        }
+/*        if (alertDialogBuilder != null) {
+            dismissDialog();
+        }
+
+ */
         sharedPreferencesManager = null;
         alertDialogBuilder = null;
         projectFragment = null;

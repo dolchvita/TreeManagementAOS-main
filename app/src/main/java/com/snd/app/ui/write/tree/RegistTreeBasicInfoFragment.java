@@ -52,6 +52,7 @@ public class RegistTreeBasicInfoFragment extends TMFragment implements TreeHasht
     private TreeInitializingDTO treeInitializingDTO;
     /* 앱 내에서 한번만 생성되어 사용되는 리소스들 */
     private AlertDialog.Builder alertDialogBuilder;
+    AlertDialog dialog;
     TreeDataListRepository treeDataListRepository;
     SharedPreferences sharedPreferences;
     SharedPreferenceManager sharedPreferencesManager;
@@ -338,7 +339,7 @@ public class RegistTreeBasicInfoFragment extends TMFragment implements TreeHasht
             public void onClick(DialogInterface dialog, int which) {
             }
         });
-        AlertDialog dialog = alertDialogBuilder.create();
+        dialog = alertDialogBuilder.create();
         dialog.show();
     }
 
@@ -360,16 +361,18 @@ public class RegistTreeBasicInfoFragment extends TMFragment implements TreeHasht
             public void onClick(DialogInterface dialog, int which) {
             }
         });
-        AlertDialog dialog = alertDialogBuilder.create();
+        dialog = alertDialogBuilder.create();
         dialog.show();
     }
 
 
     @Override
     public void onDestroyView() {
+        log("** 기본 정보 - onDestroyView **");
         super.onDestroyView();
         treeBasicInfoActBinding = null;
         alertDialogBuilder = null;
+        dialog.dismiss();
         treeDataListRepository = null;
         treeInitializingDTO = null;
         sharedPreferences = null;
@@ -378,6 +381,9 @@ public class RegistTreeBasicInfoFragment extends TMFragment implements TreeHasht
         editText = null;
         recyclerView = null;
         photoAdapter = null;
+        if(cameraPreviewDialogFragment != null){
+            cameraPreviewDialogFragment.dismiss();
+        }
         cameraPreviewDialogFragment = null;
         treeHashtagCustomAdapter = null;
         flexboxLayout = null;

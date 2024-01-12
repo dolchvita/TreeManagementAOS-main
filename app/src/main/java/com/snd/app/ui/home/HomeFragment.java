@@ -2,6 +2,7 @@ package com.snd.app.ui.home;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -35,6 +36,9 @@ public class HomeFragment extends TMFragment {
     HomeViewModel homeVM;
     MainViewModel mainVM;
     boolean isNfcPermissionGranted;
+    AlertDialog.Builder builder;
+    AlertDialog dialog;
+
 
     @Nullable
     @Override
@@ -44,21 +48,35 @@ public class HomeFragment extends TMFragment {
         homeVM = new ViewModelProvider(this).get(HomeViewModel.class);
         homeFrBinding.setHomeVM(homeVM);    //홈뷰모델 연동
         mainVM = new ViewModelProvider(this).get(MainViewModel.class);
-
         sharedPreferenceManager = SharedPreferenceManager.getInstance(getActivity().getApplicationContext());
-        setUserInfo();
         isNfcPermissionGranted = ((MainActivity)getActivity()).isNfcPermissionGranted;
+        setUserInfo();
 
         AppCompatTextView name = homeFrBinding.name;
         String text = getString(R.string.user_name2, sharedPreferenceManager.getString("name"));
         name.setText(text);
 
+        return homeFrBinding.getRoot();
+    }
+
+
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        // 회원정보 조회 페이지
+        homeVM.profile.observe(getActivity(), s -> {
+            startActivity(new UserInfoActivity());
+        });
+
         homeVM.tabClick.observe(getActivity(), integer -> {
             switchFragment(integer);
         });
-
-        return homeFrBinding.getRoot();
     }
+
+
+
 
 
     public void switchFragment(int tabClick){
@@ -77,33 +95,6 @@ public class HomeFragment extends TMFragment {
 
 
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        // 회원정보 조회 페이지
-        homeVM.profile.observe(this,s -> {
-            startActivity(new UserInfoActivity());
-        });
-
-        /*
-        Log.d(TAG, "**확인 좀요 1 ** " + mainVM.isNfc.getValue());
-        Log.d(TAG, "**확인 좀요 1 ** " + mainVM.isGps.getValue());
-        Log.d(TAG, "**확인 좀요 1 ** " + mainVM.isNetwork.getValue());
-
-
-        if (isNfcPermissionGranted) {
-            // 권한이 승인된 경우
-            Log.d(TAG, "**확인 좀요 111 ** " + isNfcPermissionGranted);
-        } else {
-            // 권한이 거부된 경우
-            Log.d(TAG, "**확인 좀요 22s ** " + isNfcPermissionGranted);
-        }
-
-         */
-    }
-
-
-
     void setUserInfo(){
         UserDTO userDTO = new UserDTO();
         userDTO.setName(sharedPreferenceManager.getString("name"));
@@ -112,13 +103,12 @@ public class HomeFragment extends TMFragment {
         if(sharedPreferenceManager.getString("name") == null){
             showMessage();
         }
-
         homeVM.setUserInfo(userDTO);
     }
 
 
     void showMessage(){
-        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+        builder = new AlertDialog.Builder(getContext());
         builder.setTitle("로그인 오류");
         builder.setMessage("재로그인 해주세요.");
         builder.setPositiveButton("확인", new DialogInterface.OnClickListener() {
@@ -131,13 +121,14 @@ public class HomeFragment extends TMFragment {
             public void onClick(DialogInterface dialog, int which) {
             }
         });
-        AlertDialog dialog = builder.create();
+        dialog = builder.create();
         dialog.show();
 
         // 확인을 누르건, 취소를 누르건 이 메시지가 뜬다면 로그인 화면으로 튕겨버리기
         Intent intent = new Intent(getContext(), LoginActivity.class);
         startActivity(intent);
         getActivity().finish();
+
     }
 
 
@@ -151,8 +142,7 @@ public class HomeFragment extends TMFragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        homeFrBinding = null;
-        sharedPreferenceManager = null;
+        dialog.dismiss();
     }
 
 

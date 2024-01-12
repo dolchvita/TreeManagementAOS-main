@@ -3,10 +3,8 @@ package com.snd.app.data.camera;
 import android.app.Dialog;
 import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
-import android.view.ScaleGestureDetector;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
@@ -15,14 +13,11 @@ import android.widget.ImageView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.AppCompatButton;
-import androidx.camera.core.Camera;
-import androidx.camera.core.CameraControl;
-import androidx.camera.core.CameraInfo;
+import androidx.appcompat.widget.AppCompatImageView;
 import androidx.camera.core.Preview;
 import androidx.camera.view.PreviewView;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.databinding.DataBindingUtil;
-import androidx.fragment.app.DialogFragment;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModelProvider;
 
@@ -31,7 +26,6 @@ import com.google.android.material.button.MaterialButton;
 import com.snd.app.R;
 import com.snd.app.common.TMDialogFragment;
 import com.snd.app.databinding.CameraPreviewDialogBinding;
-import com.snd.app.databinding.CameraPreviewDialogBindingImpl;
 
 import java.io.File;
 
@@ -44,6 +38,7 @@ public class CameraPreviewDialogFragment extends TMDialogFragment {
     PreviewView camera_preview;
     MaterialButton bt_take_photo;
     public MutableLiveData<File> saveFile = new MutableLiveData<>();
+
     /* 조건에 따라 보여질 레이아웃 */
     ConstraintLayout camera_preview_layout;
     ConstraintLayout image_preview_layout;
@@ -90,10 +85,8 @@ public class CameraPreviewDialogFragment extends TMDialogFragment {
 
 
         cameraManager.savedUri.observe(getActivity(), uri -> {
-            // 1-1) 사진을 찍고 uri 반환받기
             displayCapturedImageForReview(uri);
         });
-
 
         return cameraPreviewDialogBinding.getRoot();
     }
@@ -122,7 +115,7 @@ public class CameraPreviewDialogFragment extends TMDialogFragment {
 
             AppCompatButton bt_image_save = cameraPreviewDialogBinding.btImageSave; // 확인 버튼
             AppCompatButton bt_image_cancel = cameraPreviewDialogBinding.btImageCancel; // 다시시도 버튼
-
+            AppCompatImageView bt_file_download = cameraPreviewDialogBinding.imagePreview;  // 사진 파일 저장 버튼
 
             bt_image_save.setOnClickListener(v -> {
                 File file = cameraManager.getCurrentPhotoFile();
@@ -130,10 +123,17 @@ public class CameraPreviewDialogFragment extends TMDialogFragment {
                 dismiss();
             });
 
-
             bt_image_cancel.setOnClickListener(v -> {
                 setVisibleToButtonLayout(View.VISIBLE, View.GONE);
             });
+
+
+            bt_file_download.setOnClickListener(v -> {
+                log("무슨 반응을 하는 거야 ");
+                /* TODO : 사진 파일 저장하기 */
+                cameraManager.saveImageToGallery();
+            });
+
         }
     }
 
@@ -147,11 +147,8 @@ public class CameraPreviewDialogFragment extends TMDialogFragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
+       log("** 카메라 다이얼로그 onDestroyView **");
         cameraPreviewDialogBinding = null;
-        if (cameraManager != null) {
-            cameraManager.releaseResources();
-        }
-        cameraManager = null;
         camera_preview = null;
         bt_take_photo = null;
     }

@@ -20,12 +20,12 @@ public class UserUseCase {
 
     // 유저회원 정보 by UserId
     public void loadUserDTO(String authorization, String userId){
+        Log.d(TAG, "loadUserDTO ** " + userId + " * " + authorization);     // nulll * null
         userRepository.getUserInfoByUserId(authorization, userId);
     }
     public LiveData<UserDTO> getUserDTO(){
         return userRepository.getUserDTO();
     }
-
 
 
     // 아이디 중복체크
@@ -47,15 +47,6 @@ public class UserUseCase {
         return userRepository.getRegisterUser();
     }
 
-
-
-    // 유저회원 정보 수정 by UserId
-    public void loadUserModifyInfo(String authorization, UserModifyInfoDTO user){
-        userRepository.modifyBasicInfo(authorization, user);
-    }
-    public LiveData<UserModifyInfoDTO> getUserModifyInfoDTO(){
-        return userRepository.getUserModifyInfoDTO();
-    }
 
 
 

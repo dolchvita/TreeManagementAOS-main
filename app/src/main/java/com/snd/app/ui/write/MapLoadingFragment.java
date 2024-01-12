@@ -30,6 +30,7 @@ import com.snd.app.data.singleton.SharedPreferenceManager;
 import com.snd.app.databinding.RegistMapLoadingFrBinding;
 import com.snd.app.domain.tree.dto.TreeCoordinateDTO;
 import com.snd.app.domain.tree.dto.TreeListRangeDTO;
+import com.snd.app.ui.write.tree.RegistTreeBasicInfoFragment;
 
 import net.daum.mf.map.api.MapPoint;
 import net.daum.mf.map.api.MapView;
@@ -125,7 +126,8 @@ public class MapLoadingFragment extends TMFragment {
 
 
         mapLoadingVM._resultLiveData.observe(getActivity(), s -> {
-            ((RegistTreeInfoActivity) getActivity()).checkLocation();
+            checkLocation();
+          //  ((RegistTreeInfoActivity) getActivity()).checkLocation();
         });
 
 
@@ -147,6 +149,26 @@ public class MapLoadingFragment extends TMFragment {
 
     }   /* ./onResume */
 
+
+
+    public void checkLocation(){
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+        builder.setTitle("현재 위치가 맞습니까?");
+        builder.setMessage("");
+        builder.setPositiveButton("확인", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.write_content, new RegistTreeBasicInfoFragment()).commit();
+            }
+        });
+        builder.setNegativeButton("취소", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+            }
+        });
+        AlertDialog dialog = builder.create();
+        dialog.show();
+    }
 
 
     private void initLocationData(Location location){
