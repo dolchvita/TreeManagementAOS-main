@@ -67,7 +67,7 @@ public class CameraPreviewDialogFragment extends TMDialogFragment {
         preview.setSurfaceProvider(camera_preview.getSurfaceProvider());
         cameraManager.startCameraX(camera_preview);
 
-        /* Zoom */
+        /* Zoom 제어 */
         camera_preview.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
@@ -117,11 +117,14 @@ public class CameraPreviewDialogFragment extends TMDialogFragment {
             AppCompatButton bt_image_cancel = cameraPreviewDialogBinding.btImageCancel; // 다시시도 버튼
             AppCompatImageView bt_file_download = cameraPreviewDialogBinding.imagePreview;  // 사진 파일 저장 버튼
 
+
+            // 사진 저장
             bt_image_save.setOnClickListener(v -> {
                 File file = cameraManager.getCurrentPhotoFile();
                 saveFile.setValue(file);
                 dismiss();
             });
+
 
             bt_image_cancel.setOnClickListener(v -> {
                 setVisibleToButtonLayout(View.VISIBLE, View.GONE);
@@ -129,8 +132,6 @@ public class CameraPreviewDialogFragment extends TMDialogFragment {
 
 
             bt_file_download.setOnClickListener(v -> {
-                log("무슨 반응을 하는 거야 ");
-                /* TODO : 사진 파일 저장하기 */
                 cameraManager.saveImageToGallery();
             });
 
@@ -151,6 +152,7 @@ public class CameraPreviewDialogFragment extends TMDialogFragment {
         cameraPreviewDialogBinding = null;
         camera_preview = null;
         bt_take_photo = null;
+        cameraManager.releaseResources();
     }
 
 

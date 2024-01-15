@@ -3,6 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
+    <!-- PhotoAdapter 에서 실행되는 xml -->
     <data>
         <variable
             name="vm"
@@ -27,7 +28,6 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
             app:srcCompat="@drawable/ic_plus"
-            android:onClick="@{()->vm.onGalleryOpen()}"
             app:layout_constraintTop_toTopOf="@id/img_1"
             app:layout_constraintBottom_toBottomOf="@id/img_1"
             app:layout_constraintStart_toStartOf="@id/img_1"

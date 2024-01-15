@@ -94,37 +94,6 @@ public class RegistTreeBasicInfoFragment extends TMFragment implements TreeHasht
         flexboxLayout = treeBasicInfoActBinding.tlqk;
         treeHashtagCustomAdapter = new TreeHashtagCustomAdapter();
 
-        return treeBasicInfoActBinding.getRoot();
-    }// ./onCreate
-
-
-
-    @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-        editText = view.findViewById(R.id.tr_name);
-        editText.setVisibility(View.GONE);
-
-
-        try {
-            setTreeBasicInfoDTO();
-        } catch (JsonProcessingException e) {
-            throw new RuntimeException(e);
-        }
-
-
-        treeBasicInfoVM.Authorization.observe(getActivity(), s -> {
-            treeBasicInfoVM.setSpiciesSpinner();
-        });
-
-
-        initBasicSpinner();
-
-
-        treeBasicInfoVM.throwFailCheck().observe(getActivity(), s -> {
-            failProcess();
-        });
-
 
         /* -------------------------------------- CAMERA ------------------------------------------ */
 
@@ -135,19 +104,43 @@ public class RegistTreeBasicInfoFragment extends TMFragment implements TreeHasht
             textView.setText(count);
         });
 
-
         treeBasicInfoVM.isImage.observe(getActivity(), s -> {
             checkPhoto();
         });
 
-
         photoAdapter();
 
+
+        return treeBasicInfoActBinding.getRoot();
+    }// ./onCreate
+
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        editText = view.findViewById(R.id.tr_name);
+        editText.setVisibility(View.GONE);
+
+        try {
+            setTreeBasicInfoDTO();
+        } catch (JsonProcessingException e) {
+
+            throw new RuntimeException(e);
+        }
+
+        treeBasicInfoVM.Authorization.observe(getActivity(), s -> {
+            treeBasicInfoVM.setSpiciesSpinner();
+        });
+
+        initBasicSpinner();
+
+        treeBasicInfoVM.throwFailCheck().observe(getActivity(), s -> {
+            failProcess();
+        });
 
         treeBasicInfoVM.back.observe(getActivity(), o -> {
             finishProccess();
         });
-
 
         treeBasicInfoVM.insertProcess.observe(getActivity(), s -> {
             if(s.equals("none")){
@@ -156,7 +149,6 @@ public class RegistTreeBasicInfoFragment extends TMFragment implements TreeHasht
                 insertProcess();
             }
         });
-
 
         treeBasicInfoVM.checkTreeBasicInfo().observe(getActivity(), s -> {
             if(s.equals("success")){
@@ -169,19 +161,16 @@ public class RegistTreeBasicInfoFragment extends TMFragment implements TreeHasht
             }
         });
 
-
         /* -------------------------------------- HASHTAG ------------------------------------------ */
 
         treeBasicInfoVM.onHashtagEvent.observe(getActivity(), s -> {
             open();
         });
 
-
         treeHashtagCustomAdapter.removeItem.observe(getActivity(), integer -> {
             flexboxLayout.removeView(flexboxLayout.getChildAt(integer));
             textList.remove(textList.get(integer));
         });
-
 
     }   /* ./onViewCreated */
 
@@ -238,8 +227,8 @@ public class RegistTreeBasicInfoFragment extends TMFragment implements TreeHasht
         })/* ./Camera */;
 
 
-        treeBasicInfoVM.currentList.observe(getActivity(), files -> {
-            photoAdapter.setImageList(files);
+        treeBasicInfoVM.currentList.observe(getActivity(), bitmaps -> {
+            photoAdapter.setImageList(bitmaps);
         });
 
 
@@ -247,7 +236,7 @@ public class RegistTreeBasicInfoFragment extends TMFragment implements TreeHasht
         photoAdapter.bt_add.observe(getActivity(), s -> {
             Intent intent = new Intent(Intent.ACTION_PICK,android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
             intent.setType("image/*");
-            getActivity().startActivityForResult(intent, REQUEST_GALLERY );
+            getActivity().startActivityForResult(intent, REQUEST_GALLERY);
         });
 
 
@@ -258,7 +247,6 @@ public class RegistTreeBasicInfoFragment extends TMFragment implements TreeHasht
         });
 
     }   /* ./photoAdapter */
-
 
 
     /* --------------------------------------------- SPINNER --------------------------------------------- */
@@ -321,7 +309,6 @@ public class RegistTreeBasicInfoFragment extends TMFragment implements TreeHasht
         treeBasicInfoVM.setTextViewModel(treeInitializingDTO);
     }
 
-
     /* --------------------------------------------- INSERT --------------------------------------------- */
 
     void insertProcess(){
@@ -372,7 +359,9 @@ public class RegistTreeBasicInfoFragment extends TMFragment implements TreeHasht
         super.onDestroyView();
         treeBasicInfoActBinding = null;
         alertDialogBuilder = null;
-        dialog.dismiss();
+        if(dialog != null){
+            dialog.dismiss();
+        }
         treeDataListRepository = null;
         treeInitializingDTO = null;
         sharedPreferences = null;

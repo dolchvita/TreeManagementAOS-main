@@ -46,6 +46,8 @@ public class RegistTreeInfoActivity extends TMActivity implements MapView.POIIte
     String submitter;
     String vendor;
     public int num = 0;
+    Bitmap bitmap;
+    File file;
 
 
     @Override
@@ -75,8 +77,8 @@ public class RegistTreeInfoActivity extends TMActivity implements MapView.POIIte
 
 
     public void initMapLoadingFr(){
-        getSupportFragmentManager().beginTransaction().replace(R.id.write_content, new MapLoadingFragment()).commit();
-        //getSupportFragmentManager().beginTransaction().replace(R.id.write_content, registTreeBasicInfoFr).commit();
+        //getSupportFragmentManager().beginTransaction().replace(R.id.write_content, new MapLoadingFragment()).commit();
+        getSupportFragmentManager().beginTransaction().replace(R.id.write_content, registTreeBasicInfoFr).commit();
     }
 
 
@@ -93,24 +95,20 @@ public class RegistTreeInfoActivity extends TMActivity implements MapView.POIIte
     }
 
 
-    /*
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        // 갤러리 추가했을 때 결과 받는 메서드 - 무슨 갤러리??
-
         if (requestCode == REQUEST_GALLERY && resultCode == Activity.RESULT_OK && data != null) {
             Uri selectedImageUri = data.getData();
-            File file = cameraManager.uriToFile(this, selectedImageUri);
+            file = cameraManager.uriToFile(this, selectedImageUri);
             treeBasicInfoVM.currentFileList.add(file);
-            Bitmap bitmap = BitmapFactory.decodeFile(file.getAbsolutePath());
+            bitmap = BitmapFactory.decodeFile(file.getAbsolutePath());
             treeBasicInfoVM.addImageList(bitmap);
         }
     }
 
-     */
 
-
+/*
     public void checkLocation(){
         builder.setTitle("현재 위치가 맞습니까?");
         builder.setMessage("");
@@ -128,6 +126,7 @@ public class RegistTreeInfoActivity extends TMActivity implements MapView.POIIte
         dialog = builder.create();
         dialog.show();
     }
+ */
 
 
     public void AlertDialog(String title, String message){
@@ -215,7 +214,7 @@ public class RegistTreeInfoActivity extends TMActivity implements MapView.POIIte
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        log("** 액티비티 - onDestroy 호출 **");
+        //log("** 액티비티 - onDestroy 호출 **");
         registTreeBasicInfoFr = null;
         writeActBinding = null;
         builder = null;
@@ -224,8 +223,11 @@ public class RegistTreeInfoActivity extends TMActivity implements MapView.POIIte
         }
         if (cameraManager != null) {
             cameraManager.releaseResources();
+            cameraManager = null;
         }
-        cameraManager = null;
+        bitmap.recycle();   // 리소스 해제 작업 추가
+        file = null;
+        // 조금 줄긴 했는데, 아예 없애는 방법은 모르겠다
     }
 
 

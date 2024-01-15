@@ -179,7 +179,6 @@ public class TMActivity extends AppCompatActivity {
    }
 
 
-
    public void back(){
       builder.setTitle("입력 중인 내용을 취소하시겠습니까?");
       builder.setMessage("현재 페이지에서 입력 중인 내용은 저장되지 않습니다.");

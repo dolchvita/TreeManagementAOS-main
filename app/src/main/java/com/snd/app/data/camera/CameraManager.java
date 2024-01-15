@@ -51,7 +51,7 @@ public class CameraManager {
     public LiveData<Uri> savedUri = _savedUri;
     private ImageCapture imageCapture;  // 카메라 설정을 담고 있는 객체
     private File currentPhotoFile;      // 저장 프로세스 적용시 Bitmap 생성을 위한 파일 전달
-    Activity activity;
+    private Activity activity;
     GetTreeBasicInfoViewModel getTreeBasicInfoVM;
     private Camera camera; // 카메라 객체
     ProcessCameraProvider cameraProvider;
@@ -70,21 +70,21 @@ public class CameraManager {
     }
 
 
-
     /* ----------------------------------------- Preview ----------------------------------------- */
 
     public void  startCameraX(PreviewView viewFinder) {
+        Log.d(TAG, "** startCameraX - activity 확인 ** " + activity);
+
         final ListenableFuture<ProcessCameraProvider> cameraProviderFuture = ProcessCameraProvider.getInstance(activity);
 
         cameraProviderFuture.addListener(() -> {
             try {
-                ProcessCameraProvider cameraProvider = cameraProviderFuture.get();
+                cameraProvider = cameraProviderFuture.get();
                 bindCameraPreview(cameraProvider, viewFinder);
 
                 CameraSelector cameraSelector = new CameraSelector.Builder()
                         .requireLensFacing(CameraSelector.LENS_FACING_BACK)
                         .build();
-
                 Preview preview = new Preview.Builder().build();
                 preview.setSurfaceProvider(viewFinder.getSurfaceProvider());
 
@@ -104,27 +104,31 @@ public class CameraManager {
                             preview,
                             imageCapture);
                 }
-
             } catch (ExecutionException | InterruptedException e) {
+                Log.d(TAG, " ExecutionException * InterruptedException " + e.getMessage());
             }
         }, ContextCompat.getMainExecutor(activity));
     }
 
 
     private void bindCameraPreview(@NonNull ProcessCameraProvider cameraProvider, PreviewView viewFinder) {
-        Preview preview = new Preview.Builder()
-                .build();
-        CameraSelector cameraSelector = new CameraSelector.Builder()
-                .requireLensFacing(CameraSelector.LENS_FACING_BACK)
-                .build();
-        preview.setSurfaceProvider(viewFinder.getSurfaceProvider());
-        imageCapture = new ImageCapture.Builder().build();
-        cameraProvider.unbindAll();
-        cameraProvider.bindToLifecycle((LifecycleOwner) activity, cameraSelector, preview);
+        Log.d(TAG, "** bindCameraPreview - activity 확인 ** " + activity);
 
-        // 카메라 바인딩 추가
-        camera = cameraProvider.bindToLifecycle((LifecycleOwner) activity, cameraSelector, preview);
-        getScaleGestureDetector();
+        if(activity != null){
+            Preview preview = new Preview.Builder()
+                    .build();
+            CameraSelector cameraSelector = new CameraSelector.Builder()
+                    .requireLensFacing(CameraSelector.LENS_FACING_BACK)
+                    .build();
+            preview.setSurfaceProvider(viewFinder.getSurfaceProvider());
+            imageCapture = new ImageCapture.Builder().build();
+            cameraProvider.unbindAll();
+            cameraProvider.bindToLifecycle((LifecycleOwner) activity, cameraSelector, preview);
+
+            // 카메라 바인딩 추가
+            camera = cameraProvider.bindToLifecycle((LifecycleOwner) activity, cameraSelector, preview);
+            getScaleGestureDetector();
+        }
     }
 
 
@@ -152,33 +156,33 @@ public class CameraManager {
 
     // 2. 사진 촬영
     public void takePhoto() {
-        File photoFile = new File(activity.getExternalFilesDir(Environment.DIRECTORY_PICTURES),
-                new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.US).format(System.currentTimeMillis()) + ".jpg");
+        Log.d(TAG, "** takePhoto - activity 확인 ** " + activity);
+        if(activity != null){
+            File photoFile = new File(activity.getExternalFilesDir(Environment.DIRECTORY_PICTURES),
+                    new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.US).format(System.currentTimeMillis()) + ".jpg");
+            ImageCapture.OutputFileOptions outputFileOptions = new ImageCapture.OutputFileOptions.Builder(photoFile).build();
+            imageCapture.takePicture(outputFileOptions, ContextCompat.getMainExecutor(activity),
+                    new ImageCapture.OnImageSavedCallback() {
+                        @Override
+                        public void onImageSaved(@NonNull ImageCapture.OutputFileResults outputFileResults) {
+                            Uri uri = outputFileResults.getSavedUri();
+                            // 3-1) 화면에 프리뷰 될 이미지
+                            _savedUri.setValue(uri);
 
-        ImageCapture.OutputFileOptions outputFileOptions = new ImageCapture.OutputFileOptions.Builder(photoFile).build();
-        imageCapture.takePicture(outputFileOptions, ContextCompat.getMainExecutor(activity),
-                new ImageCapture.OnImageSavedCallback() {
-                    @Override
-                    public void onImageSaved(@NonNull ImageCapture.OutputFileResults outputFileResults) {
-                        Uri uri = outputFileResults.getSavedUri();
-                        // 3-1) 화면에 프리뷰 될 이미지
-                        _savedUri.setValue(uri);
-
-                        // 3-2) 서버에 업로드할 파일
-                        currentPhotoFile = uriToFile(activity, uri);
-                    }
-
-                    @Override
-                    public void onError(@NonNull ImageCaptureException exception) {
-                        Log.e(TAG, "CameraManager - takePhoto onError " + exception.getMessage());
-                    }
-                });
+                            // 3-2) 서버에 업로드할 파일
+                            currentPhotoFile = uriToFile(activity, uri);
+                        }
+                        @Override
+                        public void onError(@NonNull ImageCaptureException exception) {
+                            Log.e(TAG, "CameraManager - takePhoto onError " + exception.getMessage());
+                        }
+                    });
+        }
     }
 
 
     public void saveImageToGallery(){
-        Log.d(TAG, "CameraManager - saveImageToGallery ");
-
+        Log.d(TAG, "** saveImageToGallery - 액티비티 확인 ** " + activity);
         String name = new SimpleDateFormat(FILENAME_FORMAT, Locale.US)
                 .format(System.currentTimeMillis());
         ContentValues contentValues = new ContentValues();
@@ -188,18 +192,18 @@ public class CameraManager {
             contentValues.put(MediaStore.Images.Media.RELATIVE_PATH, "Pictures/CameraX-Image");
         }
 
-        // 추가된 코드: 컨텐츠 리졸버를 사용하여 이미지를 갤러리에 저장
-        ContentResolver resolver = activity.getContentResolver();
-        Uri uri = resolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, contentValues);
-        try (OutputStream stream = resolver.openOutputStream(uri)) {
-            Bitmap bitmap = MediaStore.Images.Media.getBitmap(resolver, _savedUri.getValue());
-            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream);
-            stream.flush();
-
-            Toast.makeText(activity.getApplicationContext(), "사진이 저장되었습니다.", Toast.LENGTH_SHORT).show();
-
-        } catch (IOException e) {
-            Log.e(TAG, "Error saving image to gallery", e);
+        // 추가된 코드 : 컨텐츠 리졸버를 사용하여 이미지를 갤러리에 저장
+        if(activity != null){
+            ContentResolver resolver = activity.getContentResolver();
+            Uri uri = resolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, contentValues);
+            try (OutputStream stream = resolver.openOutputStream(uri)) {
+                Bitmap bitmap = MediaStore.Images.Media.getBitmap(resolver, _savedUri.getValue());
+                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream);
+                stream.flush();
+                Toast.makeText(activity.getApplicationContext(), "사진이 저장되었습니다.", Toast.LENGTH_SHORT).show();
+            } catch (IOException e) {
+                Log.e(TAG, "Error saving image to gallery", e);
+            }
         }
     }
 
@@ -251,10 +255,6 @@ public class CameraManager {
     }
 
 
-    // 사진 파일 저장하기 - 자리
-
-
-
     /* ----------------------------------------- Destroy ----------------------------------------- */
 
     public void releaseResources(){
@@ -263,9 +263,15 @@ public class CameraManager {
         }
         if (_savedUri != null) {
             _savedUri.setValue(null);
+            savedUri.removeObservers(null);
+            _savedUri = null;
         }
         camera = null;
+        imageCapture = null;
+        currentPhotoFile = null;
         scaleGestureDetector  = null;
+        FILENAME_FORMAT = null;
+        activity = null;
     }
 
 

@@ -142,7 +142,9 @@ public class HomeFragment extends TMFragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        dialog.dismiss();
+        if(dialog != null){
+            dialog.dismiss();
+        }
     }
 
 

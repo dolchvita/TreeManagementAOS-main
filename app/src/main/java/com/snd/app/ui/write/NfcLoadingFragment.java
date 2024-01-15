@@ -25,20 +25,21 @@ import com.airbnb.lottie.LottieAnimationView;
 import com.snd.app.R;
 import com.snd.app.common.TMFragment;
 import com.snd.app.data.singleton.SharedPreferenceManager;
+import com.snd.app.databinding.NfcWriteFrBinding;
 import com.snd.app.repository.tree.TreeViewModel;
 
 import java.io.IOException;
 import java.util.Arrays;
 
 import io.reactivex.Observable;
+import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
 
-
 // 등록 버튼 누르면 가장 먼저 동작하는 프레그먼트
 public class NfcLoadingFragment extends TMFragment {
-    com.snd.app.databinding.NfcWriteFrBinding nfcWriteFrBinding;
+    NfcWriteFrBinding nfcWriteFrBinding;
     public NfcAdapter nfcAdapter;
     TreeViewModel treeVM;
     public PendingIntent nfcPendingIntent;
@@ -98,6 +99,7 @@ public class NfcLoadingFragment extends TMFragment {
                                         return "success";
                                     }
                                 })
+                                .observeOn(AndroidSchedulers.mainThread()) // 결과를 메인 쓰레드에서 받습니다.
                                 .subscribe(new Consumer<String>() {
                                     @Override
                                     public void accept(String result) throws Exception {

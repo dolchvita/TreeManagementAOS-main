@@ -76,7 +76,9 @@ public class PhotoAdapter extends RecyclerView.Adapter<PhotoAdapter.PhotoViewHol
 
     public void removePhoto(int clickedPosition) {
         if(imageList != null){
-            imageList.remove(clickedPosition);
+            Bitmap image = imageList.get(clickedPosition);
+            imageList.remove(image);
+            image.recycle();
         }
         _removeImage.setValue(clickedPosition);
         Log.d(TAG, "포토어댑터 남은 리스트 " + imageList);      // [/data/user/0/com.snd.app/cache/20231204_131940.jpg]
