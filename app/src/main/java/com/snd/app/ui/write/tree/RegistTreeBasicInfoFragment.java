@@ -110,7 +110,6 @@ public class RegistTreeBasicInfoFragment extends TMFragment implements TreeHasht
 
         photoAdapter();
 
-
         return treeBasicInfoActBinding.getRoot();
     }// ./onCreate
 
@@ -160,6 +159,7 @@ public class RegistTreeBasicInfoFragment extends TMFragment implements TreeHasht
                 getActivity().finish();
             }
         });
+
 
         /* -------------------------------------- HASHTAG ------------------------------------------ */
 
@@ -215,21 +215,36 @@ public class RegistTreeBasicInfoFragment extends TMFragment implements TreeHasht
             }else {
                 cameraPreviewDialogFragment = new CameraPreviewDialogFragment();
                 cameraPreviewDialogFragment.show(getActivity().getSupportFragmentManager(), "inputDialog");
+
                 if(cameraPreviewDialogFragment != null){
                     cameraPreviewDialogFragment.saveFile.observe(getActivity(), file -> {
-                        treeBasicInfoVM.currentFileList.add(file);
                         // File 객체가 넘어올 예정
+                        treeBasicInfoVM.addImageList2(file);
+
+                        /*
+                        treeBasicInfoVM.currentFileList.add(file);
+
                         Bitmap bitmap = BitmapFactory.decodeFile(file.getAbsolutePath());
                         treeBasicInfoVM.addImageList(bitmap);
+                         */
                     });
                 }
             }
         })/* ./Camera */;
 
 
+        /* photoAdapter에서 Bitmap 객체들을 받아서 화면에 렌더링
+        * --> 어댑터에서 코드를 변경하면, 비트맵 처리를 안 해도 가능하지 않을까? */
+        treeBasicInfoVM.currentFileList.observe(getActivity(), files -> {
+            photoAdapter.setImageList2(files);
+        });
+
+                /*
         treeBasicInfoVM.currentList.observe(getActivity(), bitmaps -> {
             photoAdapter.setImageList(bitmaps);
         });
+
+                 */
 
 
         // 갤러리 추가 버튼
@@ -242,8 +257,14 @@ public class RegistTreeBasicInfoFragment extends TMFragment implements TreeHasht
 
         // 사진 지우는 메서드
         photoAdapter.removeImage.observe(getActivity(), integer -> {
-            treeBasicInfoVM.currentFileList.remove(treeBasicInfoVM.currentFileList.get(integer));   // 해당 지우기
-            treeBasicInfoVM.countText.setValue(treeBasicInfoVM.currentFileList.size());
+            // 지워진 결과가 반환되는데? - 왜 하나일까
+            // 요게 문제구먼, 하나밖에 안 들어있음, 렌더링 속도가 느린 건가?
+            log("기본 프레그먼트에서 확인 1 ** " + treeBasicInfoVM._currentFileList);
+            //log("기본 프레그먼트에서 확인 2 ** " + treeBasicInfoVM.currentFileList.getValue());
+            //log("기본 프레그먼트에서 확인 3 ** " + treeBasicInfoVM._currentFileList.get(integer));
+
+            //treeBasicInfoVM._currentFileList.remove(treeBasicInfoVM._currentFileList.get(integer));   // 해당 지우기
+            //treeBasicInfoVM.countText.setValue(treeBasicInfoVM._currentFileList.size());
         });
 
     }   /* ./photoAdapter */

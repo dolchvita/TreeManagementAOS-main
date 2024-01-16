@@ -148,11 +148,11 @@ public class CameraPreviewDialogFragment extends TMDialogFragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-       log("** 카메라 다이얼로그 onDestroyView **");
         cameraPreviewDialogBinding = null;
         camera_preview = null;
         bt_take_photo = null;
-        cameraManager.releaseResources();
+        this.dismiss();
+        //cameraManager.releaseResources();
     }
 
 

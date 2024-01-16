@@ -46,7 +46,7 @@ public class RegistTreeInfoActivity extends TMActivity implements MapView.POIIte
     String submitter;
     String vendor;
     public int num = 0;
-    Bitmap bitmap;
+    //Bitmap bitmap;
     File file;
 
 
@@ -101,9 +101,14 @@ public class RegistTreeInfoActivity extends TMActivity implements MapView.POIIte
         if (requestCode == REQUEST_GALLERY && resultCode == Activity.RESULT_OK && data != null) {
             Uri selectedImageUri = data.getData();
             file = cameraManager.uriToFile(this, selectedImageUri);
-            treeBasicInfoVM.currentFileList.add(file);
+            treeBasicInfoVM.addImageList2(file);
+
+            //treeBasicInfoVM.addImageList2(file);
+
+            /*
             bitmap = BitmapFactory.decodeFile(file.getAbsolutePath());
             treeBasicInfoVM.addImageList(bitmap);
+             */
         }
     }
 
@@ -222,12 +227,11 @@ public class RegistTreeInfoActivity extends TMActivity implements MapView.POIIte
             dialog.dismiss();
         }
         if (cameraManager != null) {
-            cameraManager.releaseResources();
+            cameraManager.releaseResources();      // 여기서만 리소스 해제를 실시한다.
             cameraManager = null;
         }
-        bitmap.recycle();   // 리소스 해제 작업 추가
+        //bitmap.recycle();   // 리소스 해제 작업 추가
         file = null;
-        // 조금 줄긴 했는데, 아예 없애는 방법은 모르겠다
     }
 
 

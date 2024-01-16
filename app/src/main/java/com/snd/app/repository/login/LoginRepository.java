@@ -65,8 +65,6 @@ public class LoginRepository {
                             Object data = responseVO.getData();
                             token.setValue(data.toString());
 
-                            Log.d(TAG, "** 토큰 시발 ** " + token.getValue());
-
                         } else {
                             try {
                                 Log.d(TAG, "** 오류 / 응답 ** " + response.body());     // null
@@ -75,9 +73,7 @@ public class LoginRepository {
                                 Log.d(TAG, "** 오류 / 응답 ** " + response);
 
                                 String responseBody = response.errorBody().toString();
-
                                 Log.d(TAG, "** 바디 ** " + responseBody);
-
                                // token.setValue("fail");
 
                             } catch (IOException e) {

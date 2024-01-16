@@ -42,14 +42,16 @@ public class RegistTreeBasicInfoViewModel extends TMViewModel{
 
     public MutableLiveData<String> onHashtagEvent = new MutableLiveData<>();
 
-
     // 카메라 실행
     public MutableLiveData camera = new MutableLiveData();
 
-    private List<Bitmap> _currentList = new ArrayList<>();     // 파일이 들어올 때마다 객체를 담고
-    public MutableLiveData<List<Bitmap>> currentList = new MutableLiveData<>();  // PhotoAdapter로 전달할 객체
+    //private List<Bitmap> _currentList = new ArrayList<>();     // 파일이 들어올 때마다 객체를 담고
+    //public MutableLiveData<List<Bitmap>> currentList = new MutableLiveData<>();  // PhotoAdapter로 전달할 객체
 
-    public List<File> currentFileList = new ArrayList<>();  // 서버로 전달할 Multipart 객체
+    public List<File> _currentFileList = new ArrayList<>();  // 서버로 전달할 Multipart 객체
+    public MutableLiveData<List<File>> currentFileList = new MutableLiveData<>();  // PhotoAdapter로 전달할 객체
+
+
     public MutableLiveData back = new MutableLiveData<>();
     @Inject
     TreeDataListUseCase treeDataListUseCase;
@@ -71,13 +73,22 @@ public class RegistTreeBasicInfoViewModel extends TMViewModel{
 
     // 사진 추가하는 메서드
     public void addImageList(Bitmap bitmap) {
-        if(_currentList.size() < 2){
-            _currentList.add(bitmap);
-            currentList.setValue(_currentList);
-        }
-        //Log.d(TAG, "사진 추가됨 ** " + _currentList);
-        countText.setValue(_currentList.size());
+        /* 이 메서드에 대한 설명 :
+        * 사진이 추가될 때마다 비트맵을 추가하고 그 결과를 실시간으로 알리기.
+        * 그 개수도 실시간으로 렌더링하고,
+        * 그리고 그 결과를 반영하여 포토어댑터의 이미지 표기를 보여줌 */
+        /*
+        * */
     }
+
+    public void addImageList2(File file) {
+        if(_currentFileList.size() < 2){
+            _currentFileList.add(file);
+            currentFileList.setValue(_currentFileList);
+        }
+        countText.setValue(_currentFileList.size());
+    }
+
 
 
     // 1 화면에 표시되는 메서드
@@ -99,6 +110,7 @@ public class RegistTreeBasicInfoViewModel extends TMViewModel{
     }
 
 
+
     /* --------------------------------------------- READ MEHTOD --------------------------------------------- */
 
     public void setSpiciesSpinner(){
@@ -109,12 +121,13 @@ public class RegistTreeBasicInfoViewModel extends TMViewModel{
     }
 
 
+
     /* --------------------------------------------- CREATE MEHTOD --------------------------------------------- */
 
     // 1) 이미지 등록
     public void registerTreeImage(){
-        if(currentFileList != null && currentFileList.size() > 0){
-            treeImageUseCase.registerTreeImage(Authorization.getValue(), treeInitializingDTO.getNfc(), currentFileList);    // Images
+        if(currentFileList != null && _currentFileList.size() > 0){
+            treeImageUseCase.registerTreeImage(Authorization.getValue(), treeInitializingDTO.getNfc(), _currentFileList);    // Images
             initializeTreeBasicInfoForRegister();   // DTO
         }else {
             isImage.setValue("emptyImageList");
@@ -181,7 +194,8 @@ public class RegistTreeBasicInfoViewModel extends TMViewModel{
     @Override
     protected void onCleared() {
         super.onCleared();
-        currentList = null;
+        //currentList = null;
+        /*
         if(_currentList != null) {
             for(Bitmap bitmap: _currentList) {
                 if (bitmap != null && !bitmap.isRecycled()) {
@@ -191,9 +205,11 @@ public class RegistTreeBasicInfoViewModel extends TMViewModel{
             _currentList.clear();
             _currentList = null;
         }
+         */
+
         if(currentFileList != null) {
-            currentFileList.clear();
-            currentFileList = null;
+            _currentFileList.clear();
+            _currentFileList = null;
         }
         treeDataListUseCase = null;
     }
