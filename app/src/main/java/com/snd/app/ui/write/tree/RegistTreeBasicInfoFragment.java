@@ -22,6 +22,9 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.AppCompatEditText;
 import androidx.databinding.DataBindingUtil;
+import androidx.lifecycle.Lifecycle;
+import androidx.lifecycle.LifecycleOwner;
+import androidx.lifecycle.LifecycleRegistry;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -46,7 +49,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class RegistTreeBasicInfoFragment extends TMFragment implements TreeHashtagDialogFragment.TreeHashtagDialogListener{
+public class RegistTreeBasicInfoFragment extends TMFragment implements TreeHashtagDialogFragment.TreeHashtagDialogListener {
     RegistTreeBasicInfoFrBinding treeBasicInfoActBinding;
     RegistTreeBasicInfoViewModel treeBasicInfoVM;
     private TreeInitializingDTO treeInitializingDTO;
@@ -60,17 +63,20 @@ public class RegistTreeBasicInfoFragment extends TMFragment implements TreeHasht
     String token;
     private Spinner spinner;
     AppCompatEditText editText;
+
     /* 카메라 관련 */
     private RecyclerView recyclerView;
     public PhotoAdapter photoAdapter;
     CameraPreviewDialogFragment cameraPreviewDialogFragment;
     private static final int REQUEST_GALLERY = 102;
+
     /* 해시태그 관련 */
     List<String> textList = new ArrayList<>();
     TreeHashtagCustomAdapter treeHashtagCustomAdapter;
     FlexboxLayout flexboxLayout;
     LayoutInflater inflater;
     int position = 0;
+
 
 
     @Nullable
@@ -93,6 +99,7 @@ public class RegistTreeBasicInfoFragment extends TMFragment implements TreeHasht
         /* 해시태그 관련 */
         flexboxLayout = treeBasicInfoActBinding.tlqk;
         treeHashtagCustomAdapter = new TreeHashtagCustomAdapter();
+
 
 
         /* -------------------------------------- CAMERA ------------------------------------------ */
@@ -119,6 +126,7 @@ public class RegistTreeBasicInfoFragment extends TMFragment implements TreeHasht
         super.onViewCreated(view, savedInstanceState);
         editText = view.findViewById(R.id.tr_name);
         editText.setVisibility(View.GONE);
+
 
         try {
             setTreeBasicInfoDTO();
@@ -394,6 +402,7 @@ public class RegistTreeBasicInfoFragment extends TMFragment implements TreeHasht
         if(cameraPreviewDialogFragment != null){
             cameraPreviewDialogFragment.dismiss();
         }
+
         cameraPreviewDialogFragment = null;
         treeHashtagCustomAdapter = null;
         flexboxLayout = null;

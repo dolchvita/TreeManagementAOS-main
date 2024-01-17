@@ -226,6 +226,7 @@ public class RegistTreeInfoActivity extends TMActivity implements MapView.POIIte
         if(dialog != null) {
             dialog.dismiss();
         }
+
         if (cameraManager != null) {
             cameraManager.releaseResources();      // 여기서만 리소스 해제를 실시한다.
             cameraManager = null;

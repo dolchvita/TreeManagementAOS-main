@@ -65,7 +65,7 @@ public class CameraPreviewDialogFragment extends TMDialogFragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         Preview preview = new Preview.Builder().build();
         preview.setSurfaceProvider(camera_preview.getSurfaceProvider());
-        cameraManager.startCameraX(camera_preview);
+        cameraManager.startCameraX(camera_preview, getActivity());
 
         /* Zoom 제어 */
         camera_preview.setOnTouchListener(new View.OnTouchListener() {
@@ -79,13 +79,17 @@ public class CameraPreviewDialogFragment extends TMDialogFragment {
 
         // 사진 촬영
         cameraPreviewDialogVM.onCameraBt.observe(getActivity(), s -> {
-            cameraManager.takePhoto();
+
+            cameraManager.takePhoto(getActivity());
+
             setVisibleToButtonLayout(View.GONE, View.VISIBLE);
         });
 
 
-        cameraManager.savedUri.observe(getActivity(), uri -> {
-            displayCapturedImageForReview(uri);
+        getActivity().runOnUiThread(() -> {
+            cameraManager.getSavedUri().observe(getActivity(), uri -> {
+                displayCapturedImageForReview(uri);
+            });
         });
 
         return cameraPreviewDialogBinding.getRoot();
@@ -117,7 +121,6 @@ public class CameraPreviewDialogFragment extends TMDialogFragment {
             AppCompatButton bt_image_cancel = cameraPreviewDialogBinding.btImageCancel; // 다시시도 버튼
             AppCompatImageView bt_file_download = cameraPreviewDialogBinding.imagePreview;  // 사진 파일 저장 버튼
 
-
             // 사진 저장
             bt_image_save.setOnClickListener(v -> {
                 File file = cameraManager.getCurrentPhotoFile();
@@ -125,16 +128,13 @@ public class CameraPreviewDialogFragment extends TMDialogFragment {
                 dismiss();
             });
 
-
             bt_image_cancel.setOnClickListener(v -> {
                 setVisibleToButtonLayout(View.VISIBLE, View.GONE);
             });
 
-
             bt_file_download.setOnClickListener(v -> {
-                cameraManager.saveImageToGallery();
+                cameraManager.saveImageToGallery(getActivity());
             });
-
         }
     }
 
@@ -151,8 +151,12 @@ public class CameraPreviewDialogFragment extends TMDialogFragment {
         cameraPreviewDialogBinding = null;
         camera_preview = null;
         bt_take_photo = null;
+/*        if(cameraManager != null){
+            cameraManager.releaseResources();
+        }
+
+ */
         this.dismiss();
-        //cameraManager.releaseResources();
     }
 
 
