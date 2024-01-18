@@ -72,14 +72,12 @@ public class RegistTreeBasicInfoViewModel extends TMViewModel{
     /* ------------------------------------------------- VIEWS ------------------------------------------------- */
 
     // 사진 추가하는 메서드
+    /*
     public void addImageList(Bitmap bitmap) {
-        /* 이 메서드에 대한 설명 :
-        * 사진이 추가될 때마다 비트맵을 추가하고 그 결과를 실시간으로 알리기.
-        * 그 개수도 실시간으로 렌더링하고,
-        * 그리고 그 결과를 반영하여 포토어댑터의 이미지 표기를 보여줌 */
-        /*
-        * */
     }
+
+     */
+
 
     public void addImageList2(File file) {
         if(_currentFileList.size() < 2){
@@ -88,7 +86,6 @@ public class RegistTreeBasicInfoViewModel extends TMViewModel{
         }
         countText.setValue(_currentFileList.size());
     }
-
 
 
     // 1 화면에 표시되는 메서드
@@ -110,7 +107,6 @@ public class RegistTreeBasicInfoViewModel extends TMViewModel{
     }
 
 
-
     /* --------------------------------------------- READ MEHTOD --------------------------------------------- */
 
     public void setSpiciesSpinner(){
@@ -119,7 +115,6 @@ public class RegistTreeBasicInfoViewModel extends TMViewModel{
     public LiveData<List<String>> getSpiciesSpinner(){
         return  treeDataListUseCase.getTreeSpeciesList();
     }
-
 
 
     /* --------------------------------------------- CREATE MEHTOD --------------------------------------------- */
@@ -140,10 +135,10 @@ public class RegistTreeBasicInfoViewModel extends TMViewModel{
         // 전달받은 리스트가 있을 경우 그 수만큼 꺼내서 해시태그 매칭하기
         treeUseCase.loadTreeBasicInfo(Authorization.getValue(), treeInitializingDTO);
     }
+
     public LiveData<String> checkTreeBasicInfo(){
         return  treeUseCase.checkTreeBasicInfo();
     }
-
 
 
     /* ------------------------------------------------- EXCEPTION ------------------------------------------------ */
@@ -151,7 +146,6 @@ public class RegistTreeBasicInfoViewModel extends TMViewModel{
     public LiveData<String> throwFailCheck(){
         return  treeDataListUseCase.throwFailCheck();
     }
-
 
 
     /* ------------------------------------------------- SPINNER ------------------------------------------------- */

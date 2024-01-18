@@ -96,9 +96,12 @@ public class GetTreeInfoActivity extends TMActivity {
             Uri selectedImageUri = data.getData();
             //Log.d(TAG, "여기서 받니~?? ** " + selectedImageUri);     // content://media/external/images/media/1000001473
 
+            // 잠시 막기 (갤러리 적용시 필요함)
+            /*
             File file = cameraManager.uriToFile(this, selectedImageUri);
             getTreeBasicInfoVM.addImageList(file);
-            //Log.d(TAG, "여기서 받니~?? 22 ** " + file);
+
+             */
         }
     }
 

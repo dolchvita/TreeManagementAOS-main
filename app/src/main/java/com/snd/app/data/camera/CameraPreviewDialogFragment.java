@@ -29,6 +29,9 @@ import com.snd.app.databinding.CameraPreviewDialogBinding;
 
 import java.io.File;
 
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.schedulers.Schedulers;
+
 
 // 카메라 기능을 대신 구현할 다이얼로그 프레그먼트
 public class CameraPreviewDialogFragment extends TMDialogFragment {
@@ -43,6 +46,9 @@ public class CameraPreviewDialogFragment extends TMDialogFragment {
     ConstraintLayout camera_preview_layout;
     ConstraintLayout image_preview_layout;
 
+   private MutableLiveData<String> saveFileResult = new MutableLiveData<>();
+
+   PhotoFileManager photoFileManager;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -57,6 +63,7 @@ public class CameraPreviewDialogFragment extends TMDialogFragment {
         /* Preview */
         camera_preview_layout = cameraPreviewDialogBinding.cameraPreviewLayout;
         image_preview_layout = cameraPreviewDialogBinding.imagePreviewLayout;
+        photoFileManager = new PhotoFileManager();
     }
 
 
@@ -65,7 +72,7 @@ public class CameraPreviewDialogFragment extends TMDialogFragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         Preview preview = new Preview.Builder().build();
         preview.setSurfaceProvider(camera_preview.getSurfaceProvider());
-        cameraManager.startCameraX(camera_preview, getActivity());
+        cameraManager.startCameraX(camera_preview);
 
         /* Zoom 제어 */
         camera_preview.setOnTouchListener(new View.OnTouchListener() {
@@ -77,20 +84,25 @@ public class CameraPreviewDialogFragment extends TMDialogFragment {
         });
 
 
-        // 사진 촬영
+        // 사진 촬영 - 멀티 스레딩 기법 적용
         cameraPreviewDialogVM.onCameraBt.observe(getActivity(), s -> {
-
-            cameraManager.takePhoto(getActivity());
-
             setVisibleToButtonLayout(View.GONE, View.VISIBLE);
+
+            cameraManager.takePhoto()
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(uri -> {
+                        // 사진 촬영 성공, UI 업데이트 등
+                        log("사진 촬영 성공");
+                        cameraManager._savedUri.setValue(uri);
+                        displayCapturedImageForReview(uri); // 이미지 출력 메서드 호출
+                        cameraManager.currentPhotoFile = photoFileManager.uriToFile(getActivity(), uri);
+
+                    }, error -> {
+                        log("사진 처리 실패");
+                    });
         });
 
-
-        getActivity().runOnUiThread(() -> {
-            cameraManager.getSavedUri().observe(getActivity(), uri -> {
-                displayCapturedImageForReview(uri);
-            });
-        });
 
         return cameraPreviewDialogBinding.getRoot();
     }
@@ -132,8 +144,19 @@ public class CameraPreviewDialogFragment extends TMDialogFragment {
                 setVisibleToButtonLayout(View.VISIBLE, View.GONE);
             });
 
+
+            // 사진을 별도로 저장하고 싶다면 !
             bt_file_download.setOnClickListener(v -> {
-                cameraManager.saveImageToGallery(getActivity());
+                cameraManager.saveImageToGallery()
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(() -> {
+                            log("갤러리 저장 성공");
+                            saveFileResult.setValue("사진이 저장되었습니다.");
+
+                        }, error -> {
+                            log("사진 저장 실패 * " + error.getMessage());
+                        });
             });
         }
     }

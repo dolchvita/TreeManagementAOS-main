@@ -247,12 +247,6 @@ public class RegistTreeBasicInfoFragment extends TMFragment implements TreeHasht
             photoAdapter.setImageList2(files);
         });
 
-                /*
-        treeBasicInfoVM.currentList.observe(getActivity(), bitmaps -> {
-            photoAdapter.setImageList(bitmaps);
-        });
-
-                 */
 
 
         // 갤러리 추가 버튼

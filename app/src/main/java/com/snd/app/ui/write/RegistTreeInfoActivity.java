@@ -4,8 +4,6 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.nfc.NdefMessage;
 import android.nfc.NfcAdapter;
@@ -19,7 +17,7 @@ import androidx.lifecycle.ViewModelProvider;
 import com.snd.app.MainActivity;
 import com.snd.app.R;
 import com.snd.app.common.TMActivity;
-import com.snd.app.data.camera.CameraManager;
+import com.snd.app.data.camera.PhotoFileManager;
 import com.snd.app.databinding.RegisterActBinding;
 import com.snd.app.ui.write.pest.RegistTreePestInfoFragment;
 import com.snd.app.ui.write.tree.RegistEnvironmentInfoFragment;
@@ -42,12 +40,12 @@ public class RegistTreeInfoActivity extends TMActivity implements MapView.POIIte
     RegistTreeBasicInfoFragment registTreeBasicInfoFr;
     AlertDialog.Builder builder;
     AlertDialog dialog;
-    CameraManager cameraManager;
     String submitter;
     String vendor;
     public int num = 0;
-    //Bitmap bitmap;
     File file;
+
+    PhotoFileManager photoFileManager;
 
 
     @Override
@@ -66,7 +64,8 @@ public class RegistTreeInfoActivity extends TMActivity implements MapView.POIIte
         getSupportFragmentManager().beginTransaction().replace(R.id.write_content, new NfcLoadingFragment()).commit();
 
         registTreeBasicInfoFr = new RegistTreeBasicInfoFragment();
-        cameraManager = new CameraManager(this);
+        photoFileManager = new PhotoFileManager();
+
 
         // 뒤로가기
         treeInfoVM.back.observe(this, o -> {
@@ -100,38 +99,13 @@ public class RegistTreeInfoActivity extends TMActivity implements MapView.POIIte
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == REQUEST_GALLERY && resultCode == Activity.RESULT_OK && data != null) {
             Uri selectedImageUri = data.getData();
-            file = cameraManager.uriToFile(this, selectedImageUri);
+            // 테스트 위해 잠시 막긍
+
+            // 아 이거 모듈화 각인데
+            file = photoFileManager.uriToFile(this, selectedImageUri);
             treeBasicInfoVM.addImageList2(file);
-
-            //treeBasicInfoVM.addImageList2(file);
-
-            /*
-            bitmap = BitmapFactory.decodeFile(file.getAbsolutePath());
-            treeBasicInfoVM.addImageList(bitmap);
-             */
         }
     }
-
-
-/*
-    public void checkLocation(){
-        builder.setTitle("현재 위치가 맞습니까?");
-        builder.setMessage("");
-        builder.setPositiveButton("확인", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                getSupportFragmentManager().beginTransaction().replace(R.id.write_content, new RegistTreeBasicInfoFragment()).commit();
-            }
-        });
-        builder.setNegativeButton("취소", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-            }
-        });
-        dialog = builder.create();
-        dialog.show();
-    }
- */
 
 
     public void AlertDialog(String title, String message){
@@ -226,12 +200,7 @@ public class RegistTreeInfoActivity extends TMActivity implements MapView.POIIte
         if(dialog != null) {
             dialog.dismiss();
         }
-
-        if (cameraManager != null) {
-            cameraManager.releaseResources();      // 여기서만 리소스 해제를 실시한다.
-            cameraManager = null;
-        }
-        //bitmap.recycle();   // 리소스 해제 작업 추가
+        photoFileManager = null;
         file = null;
     }
 

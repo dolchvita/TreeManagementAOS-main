@@ -1,16 +1,27 @@
 package com.snd.app.data.camera;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.content.ContentResolver;
+import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
+import android.graphics.Bitmap;
 import android.net.Uri;
+import android.os.Build;
+import android.os.Environment;
+import android.provider.MediaStore;
+import android.provider.OpenableColumns;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.ScaleGestureDetector;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.camera.core.Camera;
 import androidx.camera.core.CameraSelector;
 import androidx.camera.core.ImageCapture;
+import androidx.camera.core.ImageCaptureException;
 import androidx.camera.core.Preview;
 import androidx.camera.lifecycle.ProcessCameraProvider;
 import androidx.camera.view.PreviewView;
@@ -25,52 +36,51 @@ import com.google.common.util.concurrent.ListenableFuture;
 import com.snd.app.ui.read.GetTreeBasicInfoViewModel;
 
 import java.io.File;
-import java.nio.channels.Channels;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.text.SimpleDateFormat;
+import java.util.Locale;
 import java.util.concurrent.ExecutionException;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
+import io.reactivex.Completable;
+import io.reactivex.Single;
 
 public class CameraManager {
     protected String TAG = this.getClass().getName();
-    //private MutableLiveData<Uri> _savedUri = new MutableLiveData<>();       // 화면 표시를 위해 사진의 uri 전달
-    //public LiveData<Uri> savedUri = _savedUri;
-
-
-
+    public MutableLiveData<Uri> _savedUri = new MutableLiveData<>();       // 화면 표시를 위해 사진의 uri 전달
+    public LiveData<Uri> savedUri = _savedUri;
     private ImageCapture imageCapture;  // 카메라 설정을 담고 있는 객체
-    private File currentPhotoFile;      // 저장 프로세스 적용시 Bitmap 생성을 위한 파일 전달
-    //private Activity activity;
+    public File currentPhotoFile;      // 저장 프로세스 적용시 Bitmap 생성을 위한 파일 전달
+    private Activity activity;
     GetTreeBasicInfoViewModel getTreeBasicInfoVM;
     private Camera camera; // 카메라 객체
     ProcessCameraProvider cameraProvider;
     ScaleGestureDetector scaleGestureDetector;
     String FILENAME_FORMAT = "yyyyMMdd_HHmmss";  // 리파지토리에서 수정예정
 
-    private ExecutorService cameraExecutor;  // 비동기 실행 객체
-    CameraRepository cameraRepository;
-
 
     public CameraManager(Activity activity) {
-        //this.activity = activity;
+        this.activity = activity;
         getTreeBasicInfoVM = new ViewModelProvider((ViewModelStoreOwner) activity).get(GetTreeBasicInfoViewModel.class);
-        cameraRepository = new CameraRepository();
     }
 
 
     public File getCurrentPhotoFile() {
-        return cameraRepository.currentPhotoFile;
+        return currentPhotoFile;
     }
+
 
     /* ----------------------------------------- Preview ----------------------------------------- */
 
-    public void startCameraX(PreviewView viewFinder, Activity activity) {
+    public void  startCameraX(PreviewView viewFinder) {
         final ListenableFuture<ProcessCameraProvider> cameraProviderFuture = ProcessCameraProvider.getInstance(activity);
 
         cameraProviderFuture.addListener(() -> {
             try {
-                ProcessCameraProvider cameraProvider = cameraProviderFuture.get();
-                bindCameraPreview(cameraProvider, viewFinder, activity);
+                cameraProvider = cameraProviderFuture.get();
+                bindCameraPreview(cameraProvider, viewFinder);
 
                 CameraSelector cameraSelector = new CameraSelector.Builder()
                         .requireLensFacing(CameraSelector.LENS_FACING_BACK)
@@ -87,7 +97,7 @@ public class CameraManager {
                     cameraProvider.bindToLifecycle(
                             (LifecycleOwner) activity, cameraSelector, preview, imageCapture);
 
-                    /* LifecycleOwner 연결 */
+                    /* camera 객체 생성 */
                     camera = cameraProvider.bindToLifecycle(
                             (LifecycleOwner) activity,
                             cameraSelector,
@@ -101,9 +111,7 @@ public class CameraManager {
     }
 
 
-    private void bindCameraPreview(@NonNull ProcessCameraProvider cameraProvider, PreviewView viewFinder, Activity activity) {
-        Log.d(TAG, "** bindCameraPreview - activity 확인 ** " + activity);
-
+    private void bindCameraPreview(@NonNull ProcessCameraProvider cameraProvider, PreviewView viewFinder) {
         if(activity != null){
             Preview preview = new Preview.Builder()
                     .build();
@@ -117,12 +125,12 @@ public class CameraManager {
 
             // 카메라 바인딩 추가
             camera = cameraProvider.bindToLifecycle((LifecycleOwner) activity, cameraSelector, preview);
-            getScaleGestureDetector(activity);
+            getScaleGestureDetector();
         }
     }
 
 
-    public void getScaleGestureDetector(Activity activity){
+    public void getScaleGestureDetector(){
         if (camera != null) {
             scaleGestureDetector = new ScaleGestureDetector(activity, new ScaleGestureDetector.SimpleOnScaleGestureListener() {
                 @Override
@@ -144,133 +152,86 @@ public class CameraManager {
 
     /* ----------------------------------------- Photo ----------------------------------------- */
 
-    // 2. 사진 촬영 - 백그라운드 처리할 부분
+    public Single<Uri> takePhoto() {
+        return Single.create(emitter -> {
+            File photoFile = new File(activity.getExternalFilesDir(Environment.DIRECTORY_PICTURES),
+                    new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.US).format(System.currentTimeMillis()) + ".jpg");
+            ImageCapture.OutputFileOptions outputFileOptions = new ImageCapture.OutputFileOptions.Builder(photoFile).build();
 
-    public void takePhoto(Activity activity){
-        cameraRepository.takePhoto(activity, imageCapture);
-    }
+            imageCapture.takePicture(outputFileOptions, ContextCompat.getMainExecutor(activity),
+                    new ImageCapture.OnImageSavedCallback() {
+                        @Override
+                        public void onImageSaved(@NonNull ImageCapture.OutputFileResults outputFileResults) {
+                            Uri uri = outputFileResults.getSavedUri();
 
-    public void saveImageToGallery(Activity activity){
-        cameraRepository.saveImageToGallery(activity);
-    }
-
-    public File uriToFile(Context context, Uri contentUri) {
-        return cameraRepository.uriToFile(context, contentUri);
-    }
-
-    public LiveData<Uri> getSavedUri(){
-        return cameraRepository.savedUri;
-    }
-
-
-
-    /*
-    public void takePhoto() {
-        Runnable savePhotoTask = new Runnable() {
-            @Override
-            public void run() {
-                // 사진 저장 로직
-                File photoFile = new File(activity.getExternalFilesDir(Environment.DIRECTORY_PICTURES),
-                        new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.US).format(System.currentTimeMillis()) + ".jpg");
-                ImageCapture.OutputFileOptions outputFileOptions = new ImageCapture.OutputFileOptions.Builder(photoFile).build();
-                imageCapture.takePicture(outputFileOptions, cameraExecutor,
-                        new ImageCapture.OnImageSavedCallback() {
-                            @Override
-                            public void onImageSaved(@NonNull ImageCapture.OutputFileResults outputFileResults) {
-                                Uri uri = outputFileResults.getSavedUri();
-                                // 3-1) 화면에 프리뷰 될 이미지
-                                _savedUri.setValue(uri);
-
-                                // 3-2) 서버에 업로드할 파일
-                                currentPhotoFile = uriToFile(activity, uri);
-                            }
-                            @Override
-                            public void onError(@NonNull ImageCaptureException exception) {
-                                Log.e(TAG, "CameraManager - takePhoto onError " + exception.getMessage());
-                            }
-                        });
-            }
-        };
+                            // 저장된 사진 uri
+                            emitter.onSuccess(uri);
+                        }
+                        @Override
+                        public void onError(@NonNull ImageCaptureException exception) {
+                            emitter.onError(exception);
+                        }
+                    });
+        });
     }
 
 
-    public void saveImageToGallery(){
-        cameraExecutor.execute(() -> {
-            String name = new SimpleDateFormat(FILENAME_FORMAT, Locale.US)
-                    .format(System.currentTimeMillis());
-            ContentValues contentValues = new ContentValues();
-            contentValues.put(MediaStore.MediaColumns.DISPLAY_NAME, name);
-            contentValues.put(MediaStore.MediaColumns.MIME_TYPE, "image/jpeg");
-            if (Build.VERSION.SDK_INT > Build.VERSION_CODES.P) {
-                contentValues.put(MediaStore.Images.Media.RELATIVE_PATH, "Pictures/CameraX-Image");
-            }
-            ContentResolver resolver = activity.getContentResolver();
-            Uri uri = resolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, contentValues);
-            try (OutputStream stream = resolver.openOutputStream(uri)) {
-                Bitmap bitmap = MediaStore.Images.Media.getBitmap(resolver, _savedUri.getValue());
-                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream);
-                stream.flush();
-                Toast.makeText(activity.getApplicationContext(), "사진이 저장되었습니다.", Toast.LENGTH_SHORT).show();
-            } catch (IOException e) {
-                Log.e(TAG, "Error saving image to gallery", e);
+    public Completable saveImageToGallery() {
+        return Completable.create(emitter -> {
+            Log.d(TAG, "** saveImageToGallery 호출 1 **");
+            try {
+                String name = new SimpleDateFormat(FILENAME_FORMAT, Locale.US)
+                        .format(System.currentTimeMillis());
+                ContentValues contentValues = new ContentValues();
+                contentValues.put(MediaStore.MediaColumns.DISPLAY_NAME, name);
+                contentValues.put(MediaStore.MediaColumns.MIME_TYPE, "image/jpeg");
+                if (Build.VERSION.SDK_INT > Build.VERSION_CODES.P) {
+                    contentValues.put(MediaStore.Images.Media.RELATIVE_PATH, "Pictures/CameraX-Image");
+                    Log.d(TAG, "** saveImageToGallery 호출 2 **");
+                }
+
+                if(activity != null) {
+                    ContentResolver resolver = activity.getContentResolver();
+                    Uri uri = resolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, contentValues);
+                    if (uri == null) {
+                        throw new IOException("Uri insert failed.");
+                    }
+                    try (OutputStream stream = resolver.openOutputStream(uri)) {
+                        /* 사진 형식을 바꿀 필요가 있어보임 */
+                        Bitmap bitmap = MediaStore.Images.Media.getBitmap(resolver, _savedUri.getValue());      //_savedUri 가 null
+                        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream);
+                        stream.flush();
+                        emitter.onComplete(); // 작업 완료 알림
+                    }
+                } else {
+                    throw new NullPointerException("Activity is null");
+                }
+            } catch (Exception e) {
+                Log.e(TAG, "Error in saveImageToGallery", e);
+                emitter.onError(e); // 오류 발생 알림
             }
         });
     }
 
 
-    @SuppressLint("Range")
-    private String getFileName(Context context, Uri uri) {
-        String result = null;
-        if (uri.getScheme().equals("content")) {
-            Cursor cursor = context.getContentResolver().query(uri, null, null, null, null);
-            try {
-                if (cursor != null && cursor.moveToFirst()) {
-                    result = cursor.getString(cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME));
-                }
-            } finally {
-                cursor.close();
-            }
-        }
-        if (result == null) {
-            result = uri.getPath();
-            int cut = result.lastIndexOf('/');
-            if (cut != -1) {
-                result = result.substring(cut + 1);
-            }
-        }
-        return result;
-    }
-
-     */
-
 
     /* ----------------------------------------- Destroy ----------------------------------------- */
 
     public void releaseResources(){
-        cameraRepository.releaseResources();
-
         if (cameraProvider != null) {
             cameraProvider.unbindAll();
-            cameraProvider = null;
         }
-        /*
         if (_savedUri != null) {
             _savedUri.setValue(null);
             savedUri.removeObservers(null);
             _savedUri = null;
         }
-
-         */
         camera = null;
         imageCapture = null;
         currentPhotoFile = null;
         scaleGestureDetector  = null;
         FILENAME_FORMAT = null;
-
-        if(cameraExecutor != null){
-            cameraExecutor.shutdown();
-            cameraExecutor = null;
-        }
+        activity = null;
     }
 
 

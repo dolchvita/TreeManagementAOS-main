@@ -155,8 +155,6 @@ public class GetTreeSpecificLocationFragment extends TMFragment {
        singletonVO.treeIntegratedVO.observe(getViewLifecycleOwner(), treeIntegratedVO -> {
            getTreeSpecificLocationVM.Authorization = Authorization;
 
-           log("프레그먼트에서 확인 " + treeIntegratedVO);
-
            if(treeIntegratedVO != null){
                getTreeSpecificLocationVM.setTextView(treeIntegratedVO);
                mapViewManager.addMarkers(treeIntegratedVO.getLatitude(), treeIntegratedVO.getLongitude(), idHex);
@@ -176,7 +174,7 @@ public class GetTreeSpecificLocationFragment extends TMFragment {
 
     void initSidewakSpinner(){
         spinner = (Spinner) getView().findViewById(R.id.get_tree_specific_location_tr_state);
-        ArrayAdapter adapter = ArrayAdapter.createFromResource(getContext(), R.array.treeStatus_pest,  android.R.layout.simple_spinner_item);
+        ArrayAdapter adapter = ArrayAdapter.createFromResource(getContext(), R.array.treeStatus_pest_edit,  android.R.layout.simple_spinner_item);
         spinner.setAdapter(adapter);
     }
 
@@ -221,7 +219,6 @@ public class GetTreeSpecificLocationFragment extends TMFragment {
     }
 
 
-    // 정수인지 판별
     public boolean isInteger(String input) {
         return input.matches("-?\\d+"); // 정수 판별: 부호 선택적, 숫자 1개 이상
     }

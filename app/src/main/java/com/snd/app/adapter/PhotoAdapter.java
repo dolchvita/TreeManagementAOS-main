@@ -3,6 +3,7 @@ package com.snd.app.adapter;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -69,6 +70,7 @@ public class PhotoAdapter extends RecyclerView.Adapter<PhotoAdapter.PhotoViewHol
         Log.d(TAG, "onBindViewHolder 에서 리스트 확인 ** " +imageList2);
         if (position < imageList2.size()) {
             photo = imageList2.get(position);
+
 
             // 비트맵에서는 이미지 경로가 없음, 이미지 파일의 경로나 파일 객체가 있어야 함 !
             //imageExif.rotateImageIfRequired()
@@ -137,34 +139,10 @@ public class PhotoAdapter extends RecyclerView.Adapter<PhotoAdapter.PhotoViewHol
         public void bind2(File file) {
             if (file != null) {
                 Bitmap image = imageExif.rotateImageIfRequired(file);
+                Bitmap resizedImage  = Bitmap.createScaledBitmap(image, 200, 200, true);
 
                 // 비트맵 표시하기 전 처리할 것 (이미지뷰에는 비트맵 표시가 맞다)
-                photoImageView.setImageBitmap(image);
-                bt_photo_remove.setVisibility(View.VISIBLE);
-                add_image_1.setVisibility(View.GONE);
-
-            } else {
-                // 이미지 파일이 없을 경우 처리. 예를 들어, 기본 이미지 설정
-                photoImageView.setImageDrawable(null);
-                add_image_1.setVisibility(View.VISIBLE);
-                bt_photo_remove.setVisibility(View.GONE);
-            }
-
-            // 삭제 버튼
-            bt_photo_remove.setOnClickListener(v -> {
-                int position = getAdapterPosition();
-                showAlertDialog(position);
-            });
-
-        }   /* ./bind */
-
-
-        /* 이미지뷰에 비트맵 설정을 하는구나 */
-        public void bind(Bitmap image) {
-            if (image != null) {
-                //Bitmap bitmap = BitmapFactory.decodeFile(image.getAbsolutePath());
-                photoImageView.setImageBitmap(image);
-
+                photoImageView.setImageBitmap(resizedImage );
                 bt_photo_remove.setVisibility(View.VISIBLE);
                 add_image_1.setVisibility(View.GONE);
 

@@ -15,10 +15,7 @@ public class TMViewModel extends ViewModel {
    private static AppComponent appComponent;
 
 
-   public MutableLiveData<Boolean> isNfc = new MutableLiveData<>();
-   public MutableLiveData<Boolean> isNetwork = new MutableLiveData<>();
-   public MutableLiveData<Boolean> isGps = new MutableLiveData<>();
-
+   // 앱 컴포넌트 최초 생성 및 설정
    public static AppComponent getAppComponent() {
       appComponent = DaggerAppComponent.builder()
               .appModule(new AppModule())

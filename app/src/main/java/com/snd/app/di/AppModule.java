@@ -1,7 +1,6 @@
 package com.snd.app.di;
 
 
-import com.android.volley.RequestQueue;
 import com.snd.app.domain.tree.vo.TreeIntegratedVO;
 import com.snd.app.repository.company.CompanyRepository;
 import com.snd.app.repository.company.CompanyUseCase;
@@ -32,8 +31,6 @@ import dagger.Provides;
 
 @Module
 public class AppModule {
-    // 서버와 통신시에 데이터를 전달해줄 객체 (로그인시 사용)
-    public static RequestQueue requestQueue;
 
     //HomeFragment 와 연결되는 뷰모델 관리
     @Provides
