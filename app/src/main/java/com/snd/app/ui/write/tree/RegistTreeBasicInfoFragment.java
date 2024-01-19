@@ -86,14 +86,17 @@ public class RegistTreeBasicInfoFragment extends TMFragment implements TreeHasht
         idHex = sharedPreferencesManager.getString("idHex");
         token = sharedPreferencesManager.getString("token");
         treeBasicInfoVM.Authorization.setValue(sharedPreferencesManager.getString("token"));
+
         /* 사진 관련 RecyclerView */
         recyclerView = treeBasicInfoActBinding.registTreeInfoRvImage;
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
         recyclerView.addItemDecoration(new SpaceItemDecoration(20));
+        photoAdapter = new PhotoAdapter();
+        recyclerView.setAdapter(photoAdapter);
+
         /* 해시태그 관련 */
         flexboxLayout = treeBasicInfoActBinding.tlqk;
         treeHashtagCustomAdapter = new TreeHashtagCustomAdapter();
-
         cameraPreviewDialogFragment = new CameraPreviewDialogFragment();
 
 
@@ -104,7 +107,6 @@ public class RegistTreeBasicInfoFragment extends TMFragment implements TreeHasht
             textView.setText(count);
         });
 
-        photoAdapter();
 
         return treeBasicInfoActBinding.getRoot();
     }// ./onCreate
@@ -115,7 +117,9 @@ public class RegistTreeBasicInfoFragment extends TMFragment implements TreeHasht
         super.onViewCreated(view, savedInstanceState);
         editText = view.findViewById(R.id.tr_name);
         editText.setVisibility(View.GONE);
+        log("베이직 - 뷰 생성 ");
 
+        photoAdapter();
 
         try {
             setTreeBasicInfoDTO();
@@ -210,44 +214,34 @@ public class RegistTreeBasicInfoFragment extends TMFragment implements TreeHasht
     /* -------------------------------------- Camera ------------------------------------------ */
 
     private void photoAdapter(){
-        photoAdapter = new PhotoAdapter();
-        recyclerView.setAdapter(photoAdapter);
-
         // Camera (실행) Button
         treeBasicInfoVM.camera.observe(getActivity(), o -> {
+            log("베이직 - 카메라 실행");
             if (photoAdapter != null && photoAdapter.getImageListItemCount() > 1){
                 Toast.makeText(getContext(), "이미지는 최대 2장까지 가능합니다.", Toast.LENGTH_SHORT).show();
-
-
 
             /* ---------------------------- cameraPreviewDialogFragment ---------------------------- */
             }else {
                 cameraPreviewDialogFragment.show(getActivity().getSupportFragmentManager(), "inputDialog");
 
-                if(cameraPreviewDialogFragment != null){
-                    cameraPreviewDialogFragment.saveFile.observe(getActivity(), file -> {
-                        // File 객체가 넘어올 예정
-                        treeBasicInfoVM.addImageList2(file);
-                    });
-
-                    // 2-2) 사진이 저장되었다면 (별도 기기의 사진첩)
-                    cameraPreviewDialogFragment.saveFileResult.observe(getActivity(), s -> {
-                        log("??????" + s);
-                        Toast.makeText(getContext(), s, Toast.LENGTH_SHORT);
-                    });
-
-                }   /*./if */
-
-
             } /* ./else */
+
         })/* ./Camera */;
 
 
+        if(cameraPreviewDialogFragment != null){
+            cameraPreviewDialogFragment.saveFile.observe(getActivity(), file -> {
+                // File 객체가 넘어올 예정
+                treeBasicInfoVM.addImageList2(file);
+            });
+
+            // 2-2) 사진이 저장되었다면 (별도 기기의 사진첩)
+            cameraPreviewDialogFragment.saveFileResult.observe(getActivity(), s -> {
+                Toast.makeText(getContext(), s, Toast.LENGTH_SHORT);
+            });
+        }
 
 
-
-        /* photoAdapter에서 Bitmap 객체들을 받아서 화면에 렌더링
-        * --> 어댑터에서 코드를 변경하면, 비트맵 처리를 안 해도 가능하지 않을까? */
         treeBasicInfoVM.currentFileList.observe(getActivity(), files -> {
             photoAdapter.setImageList2(files);
         });
@@ -264,9 +258,6 @@ public class RegistTreeBasicInfoFragment extends TMFragment implements TreeHasht
         // 사진 지우는 메서드
         photoAdapter.removeImage.observe(getActivity(), integer -> {
             log("사진 지우고 확인하기 ** " + photoAdapter.imageList2.size());
-
-            //log("기본 프레그먼트에서 확인 1 ** " + treeBasicInfoVM._currentFileList);    // 근데 여기서 개수가 안 맞는다 그거 같은데
-            //treeBasicInfoVM._currentFileList.remove(treeBasicInfoVM._currentFileList.get(integer));   // 해당 지우기
             treeBasicInfoVM.countText.setValue(photoAdapter.imageList2.size());
         });
 
@@ -397,7 +388,6 @@ public class RegistTreeBasicInfoFragment extends TMFragment implements TreeHasht
         if(cameraPreviewDialogFragment != null){
             cameraPreviewDialogFragment.dismiss();
         }
-
         cameraPreviewDialogFragment = null;
         treeHashtagCustomAdapter = null;
         flexboxLayout = null;

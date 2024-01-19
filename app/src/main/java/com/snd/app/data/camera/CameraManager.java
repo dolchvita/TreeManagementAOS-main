@@ -97,6 +97,9 @@ public class CameraManager {
                 Log.d(TAG, " startCameraX - 오류 발생 * " + e.getMessage());
             }
         }, ContextCompat.getMainExecutor(activity));
+        
+        // 이미지 캐시 줄이기
+        imageCapture = null;
     }
 
 

@@ -178,19 +178,6 @@ public class RegistTreeBasicInfoViewModel extends TMViewModel{
     @Override
     protected void onCleared() {
         super.onCleared();
-        //currentList = null;
-        /*
-        if(_currentList != null) {
-            for(Bitmap bitmap: _currentList) {
-                if (bitmap != null && !bitmap.isRecycled()) {
-                    bitmap.recycle();
-                }
-            }
-            _currentList.clear();
-            _currentList = null;
-        }
-         */
-
         if(currentFileList != null) {
             _currentFileList.clear();
             _currentFileList = null;

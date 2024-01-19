@@ -11,5 +11,4 @@ public class CameraPreviewDialogViewModel extends TMViewModel {
         onCameraBt.setValue("click");
     }
 
-
 }

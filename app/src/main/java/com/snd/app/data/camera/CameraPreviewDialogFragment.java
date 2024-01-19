@@ -15,6 +15,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.AppCompatButton;
 import androidx.appcompat.widget.AppCompatImageView;
+import androidx.appcompat.widget.AppCompatTextView;
 import androidx.camera.core.Preview;
 import androidx.camera.view.PreviewView;
 import androidx.constraintlayout.widget.ConstraintLayout;
@@ -43,8 +44,8 @@ public class CameraPreviewDialogFragment extends TMDialogFragment {
     MaterialButton bt_take_photo;
 
     /* 조건에 따라 보여질 레이아웃 */
-    ConstraintLayout camera_preview_layout;
-    ConstraintLayout image_preview_layout;
+    ConstraintLayout camera_preview_layout; // 카메라 렌즈 화면
+    ConstraintLayout image_preview_layout;  // 찍힌 이미지 캡처본
 
     public MutableLiveData<File> saveFile = new MutableLiveData<>();    // 저장된 파일이 -> RegisterBasicFr 전달 -> VM 전달하여 리스트 구상
     public MutableLiveData<String> saveFileResult = new MutableLiveData<>();   // 별도로 기기 사진첩에 저장 후 알림
@@ -90,7 +91,6 @@ public class CameraPreviewDialogFragment extends TMDialogFragment {
         // 1-1) 사진 촬영 - 멀티 스레딩 기법 적용
         cameraPreviewDialogVM.onCameraBt.observe(getActivity(), s -> {
             setVisibleToButtonLayout(View.GONE, View.VISIBLE);
-
             // 사진을 촬영하는 실질적인 로직을 매니저 객체가 수행하고 그 반응을 줌
             cameraManager.takePhoto()
                     .subscribeOn(Schedulers.io())
@@ -100,9 +100,6 @@ public class CameraPreviewDialogFragment extends TMDialogFragment {
                         //cameraManager._savedUri.setValue(uri);
                         saveUri = uri;
                         displayCapturedImageForReview(uri); // 이미지 출력 메서드 호출
-
-                        /* 의문이 드는 곳 ! */
-                        //cameraManager.currentPhotoFile = photoFileManager.uriToFile(getActivity(), uri);
 
                     }, error -> {
                         log("사진 처리 실패");
@@ -128,19 +125,20 @@ public class CameraPreviewDialogFragment extends TMDialogFragment {
             bt_image_save.setOnClickListener(v -> {
                 File file = photoFileManager.uriToFile(getActivity(), saveUri);
                 saveFile.setValue(file);
+
+                cameraManager.releaseResources();
                 dismiss();
             });
 
 
             bt_image_cancel.setOnClickListener(v -> {
-                setVisibleToButtonLayout(View.VISIBLE, View.GONE);
+                this.dismiss();
             });
 
 
             // 사진 저장 버튼
             // 2-1) 매니저에게 실질적인 저장로직 수행
             bt_file_download.setOnClickListener(v -> {
-                log("/???????");
                 cameraManager.saveImageToGallery(saveUri)
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())

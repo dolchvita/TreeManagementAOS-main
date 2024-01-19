@@ -12,17 +12,17 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="24dp"
-        android:layout_marginTop="20dp"
         android:layout_marginEnd="24dp"
-        android:padding="30dp"
         android:fontFamily="@font/notosans_kr_regular"
+        android:padding="30dp"
         android:text="수목 진단 정보 조회를 위해\n NFC 칩을 태그하세요."
         android:textColor="@color/cocoa_brown"
         android:textSize="25dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        tools:ignore="MissingConstraints" />
+        tools:ignore="MissingConstraints"
+        tools:layout_editor_absoluteY="0dp" />
 
     <com.airbnb.lottie.LottieAnimationView
         android:id="@+id/nfc_read_lottie"
