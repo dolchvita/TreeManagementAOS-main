@@ -50,8 +50,6 @@ public class TreeRepository {
     public MutableLiveData<String> checkModifyTreePestInfo = new MutableLiveData<>();
 
 
-
-
     /* ----------------------------------------------- CREATE METHODS ----------------------------------------------- */
 
     // 수목 기본 정보 등록

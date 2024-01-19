@@ -26,28 +26,19 @@ import java.util.List;
 /* <수목 기본 정보 입력>에서 사진 데이터 "등록"할 때 사용될 어댑터 */
 public class PhotoAdapter extends RecyclerView.Adapter<PhotoAdapter.PhotoViewHolder> {
     public String TAG = this.getClass().getName();
-
     /* 지금 작업중 */
     //private List<Bitmap> imageList = new ArrayList<>();
-    private List<File> imageList2 = new ArrayList<>();
+    public List<File> imageList2 = new ArrayList<>();
 
     private MutableLiveData<Integer> _removeImage = new MutableLiveData<>();
     public LiveData<Integer> removeImage = _removeImage;
     public MutableLiveData<String> bt_add = new MutableLiveData<>();
 
 
-    public void setImageList(List<Bitmap> imageList) {
-        Log.d(TAG, "포토어댑터가 받은 이미지 목록 " + imageList);
-        //this.imageList = imageList;
-        notifyDataSetChanged();     // 리스트 갱신
-    }
-
-
     public void setImageList2(List<File> imageList2) {
         this.imageList2 = imageList2;
         notifyDataSetChanged();     // 리스트 갱신
     }
-
 
 
     @NonNull
@@ -70,7 +61,6 @@ public class PhotoAdapter extends RecyclerView.Adapter<PhotoAdapter.PhotoViewHol
         Log.d(TAG, "onBindViewHolder 에서 리스트 확인 ** " +imageList2);
         if (position < imageList2.size()) {
             photo = imageList2.get(position);
-
 
             // 비트맵에서는 이미지 경로가 없음, 이미지 파일의 경로나 파일 객체가 있어야 함 !
             //imageExif.rotateImageIfRequired()

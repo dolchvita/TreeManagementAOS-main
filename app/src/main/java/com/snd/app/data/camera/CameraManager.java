@@ -1,25 +1,20 @@
 package com.snd.app.data.camera;
 
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.ContentResolver;
 import android.content.ContentValues;
-import android.content.Context;
-import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
 import android.provider.MediaStore;
-import android.provider.OpenableColumns;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.ScaleGestureDetector;
-import android.widget.Toast;
-
 import androidx.annotation.NonNull;
 import androidx.camera.core.Camera;
 import androidx.camera.core.CameraSelector;
+import androidx.camera.core.CameraX;
 import androidx.camera.core.ImageCapture;
 import androidx.camera.core.ImageCaptureException;
 import androidx.camera.core.Preview;
@@ -27,8 +22,6 @@ import androidx.camera.lifecycle.ProcessCameraProvider;
 import androidx.camera.view.PreviewView;
 import androidx.core.content.ContextCompat;
 import androidx.lifecycle.LifecycleOwner;
-import androidx.lifecycle.LiveData;
-import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelStoreOwner;
 
@@ -36,9 +29,7 @@ import com.google.common.util.concurrent.ListenableFuture;
 import com.snd.app.ui.read.GetTreeBasicInfoViewModel;
 
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.OutputStream;
 import java.text.SimpleDateFormat;
 import java.util.Locale;
@@ -49,8 +40,7 @@ import io.reactivex.Single;
 
 public class CameraManager {
     protected String TAG = this.getClass().getName();
-    public MutableLiveData<Uri> _savedUri = new MutableLiveData<>();       // 화면 표시를 위해 사진의 uri 전달
-    public LiveData<Uri> savedUri = _savedUri;
+
     private ImageCapture imageCapture;  // 카메라 설정을 담고 있는 객체
     public File currentPhotoFile;      // 저장 프로세스 적용시 Bitmap 생성을 위한 파일 전달
     private Activity activity;
@@ -67,11 +57,6 @@ public class CameraManager {
     }
 
 
-    public File getCurrentPhotoFile() {
-        return currentPhotoFile;
-    }
-
-
     /* ----------------------------------------- Preview ----------------------------------------- */
 
     public void  startCameraX(PreviewView viewFinder) {
@@ -79,33 +64,37 @@ public class CameraManager {
 
         cameraProviderFuture.addListener(() -> {
             try {
-                cameraProvider = cameraProviderFuture.get();
-                bindCameraPreview(cameraProvider, viewFinder);
+                if(cameraProviderFuture != null && viewFinder != null){
+                    cameraProvider = cameraProviderFuture.get();
+                    if(cameraProvider != null){
+                        bindCameraPreview(cameraProvider, viewFinder);
 
-                CameraSelector cameraSelector = new CameraSelector.Builder()
-                        .requireLensFacing(CameraSelector.LENS_FACING_BACK)
-                        .build();
-                Preview preview = new Preview.Builder().build();
-                preview.setSurfaceProvider(viewFinder.getSurfaceProvider());
+                        CameraSelector cameraSelector = new CameraSelector.Builder()
+                                .requireLensFacing(CameraSelector.LENS_FACING_BACK)
+                                .build();
+                        Preview preview = new Preview.Builder().build();
+                        preview.setSurfaceProvider(viewFinder.getSurfaceProvider());
 
-                if(viewFinder.getDisplay() != null){
-                    imageCapture = new ImageCapture.Builder()
-                            .setTargetRotation(viewFinder.getDisplay().getRotation())
-                            .build();
+                        if(viewFinder.getDisplay() != null){
+                            imageCapture = new ImageCapture.Builder()
+                                    .setTargetRotation(viewFinder.getDisplay().getRotation())
+                                    .build();
 
-                    cameraProvider.unbindAll();
-                    cameraProvider.bindToLifecycle(
-                            (LifecycleOwner) activity, cameraSelector, preview, imageCapture);
+                            cameraProvider.unbindAll();
+                            cameraProvider.bindToLifecycle(
+                                    (LifecycleOwner) activity, cameraSelector, preview, imageCapture);
 
-                    /* camera 객체 생성 */
-                    camera = cameraProvider.bindToLifecycle(
-                            (LifecycleOwner) activity,
-                            cameraSelector,
-                            preview,
-                            imageCapture);
+                            /* camera 객체 생성 */
+                            camera = cameraProvider.bindToLifecycle(
+                                    (LifecycleOwner) activity,
+                                    cameraSelector,
+                                    preview,
+                                    imageCapture);
+                        }
+                    }
                 }
             } catch (ExecutionException | InterruptedException e) {
-                Log.d(TAG, " ExecutionException * InterruptedException " + e.getMessage());
+                Log.d(TAG, " startCameraX - 오류 발생 * " + e.getMessage());
             }
         }, ContextCompat.getMainExecutor(activity));
     }
@@ -152,31 +141,34 @@ public class CameraManager {
 
     /* ----------------------------------------- Photo ----------------------------------------- */
 
+    // 1-2) 사진 촬영을 실제 구현하는 곳
     public Single<Uri> takePhoto() {
         return Single.create(emitter -> {
             File photoFile = new File(activity.getExternalFilesDir(Environment.DIRECTORY_PICTURES),
                     new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.US).format(System.currentTimeMillis()) + ".jpg");
             ImageCapture.OutputFileOptions outputFileOptions = new ImageCapture.OutputFileOptions.Builder(photoFile).build();
 
-            imageCapture.takePicture(outputFileOptions, ContextCompat.getMainExecutor(activity),
-                    new ImageCapture.OnImageSavedCallback() {
-                        @Override
-                        public void onImageSaved(@NonNull ImageCapture.OutputFileResults outputFileResults) {
-                            Uri uri = outputFileResults.getSavedUri();
+            if(imageCapture != null){
+                imageCapture.takePicture(outputFileOptions, ContextCompat.getMainExecutor(activity),
+                        new ImageCapture.OnImageSavedCallback() {
+                            @Override
+                            public void onImageSaved(@NonNull ImageCapture.OutputFileResults outputFileResults) {
+                                Uri uri = outputFileResults.getSavedUri();
 
-                            // 저장된 사진 uri
-                            emitter.onSuccess(uri);
-                        }
-                        @Override
-                        public void onError(@NonNull ImageCaptureException exception) {
-                            emitter.onError(exception);
-                        }
-                    });
+                                // 저장된 사진 uri
+                                emitter.onSuccess(uri);
+                            }
+                            @Override
+                            public void onError(@NonNull ImageCaptureException exception) {
+                                emitter.onError(exception);
+                            }
+                        });
+            }
         });
     }
 
 
-    public Completable saveImageToGallery() {
+    public Completable saveImageToGallery(Uri saveUri) {
         return Completable.create(emitter -> {
             Log.d(TAG, "** saveImageToGallery 호출 1 **");
             try {
@@ -197,10 +189,9 @@ public class CameraManager {
                         throw new IOException("Uri insert failed.");
                     }
                     try (OutputStream stream = resolver.openOutputStream(uri)) {
-                        /* 사진 형식을 바꿀 필요가 있어보임 */
-                        Bitmap bitmap = MediaStore.Images.Media.getBitmap(resolver, _savedUri.getValue());      //_savedUri 가 null
-                        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream);
+                        Bitmap bitmap = MediaStore.Images.Media.getBitmap(resolver, saveUri);  //_savedUri 가 null
                         stream.flush();
+                        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream);
                         emitter.onComplete(); // 작업 완료 알림
                     }
                 } else {
@@ -214,17 +205,11 @@ public class CameraManager {
     }
 
 
-
     /* ----------------------------------------- Destroy ----------------------------------------- */
 
     public void releaseResources(){
         if (cameraProvider != null) {
             cameraProvider.unbindAll();
-        }
-        if (_savedUri != null) {
-            _savedUri.setValue(null);
-            savedUri.removeObservers(null);
-            _savedUri = null;
         }
         camera = null;
         imageCapture = null;

@@ -76,8 +76,8 @@ public class RegistTreeInfoActivity extends TMActivity implements MapView.POIIte
 
 
     public void initMapLoadingFr(){
-        //getSupportFragmentManager().beginTransaction().replace(R.id.write_content, new MapLoadingFragment()).commit();
-        getSupportFragmentManager().beginTransaction().replace(R.id.write_content, registTreeBasicInfoFr).commit();
+        getSupportFragmentManager().beginTransaction().replace(R.id.write_content, new MapLoadingFragment()).commit();
+        //getSupportFragmentManager().beginTransaction().replace(R.id.write_content, registTreeBasicInfoFr).commit();
     }
 
 

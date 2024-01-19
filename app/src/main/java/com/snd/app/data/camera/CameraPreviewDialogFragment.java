@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -40,15 +41,17 @@ public class CameraPreviewDialogFragment extends TMDialogFragment {
     CameraManager cameraManager;
     PreviewView camera_preview;
     MaterialButton bt_take_photo;
-    public MutableLiveData<File> saveFile = new MutableLiveData<>();
 
     /* 조건에 따라 보여질 레이아웃 */
     ConstraintLayout camera_preview_layout;
     ConstraintLayout image_preview_layout;
 
-   private MutableLiveData<String> saveFileResult = new MutableLiveData<>();
+    public MutableLiveData<File> saveFile = new MutableLiveData<>();    // 저장된 파일이 -> RegisterBasicFr 전달 -> VM 전달하여 리스트 구상
+    public MutableLiveData<String> saveFileResult = new MutableLiveData<>();   // 별도로 기기 사진첩에 저장 후 알림
 
-   PhotoFileManager photoFileManager;
+    PhotoFileManager photoFileManager;
+    private Uri saveUri;
+
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -84,27 +87,71 @@ public class CameraPreviewDialogFragment extends TMDialogFragment {
         });
 
 
-        // 사진 촬영 - 멀티 스레딩 기법 적용
+        // 1-1) 사진 촬영 - 멀티 스레딩 기법 적용
         cameraPreviewDialogVM.onCameraBt.observe(getActivity(), s -> {
             setVisibleToButtonLayout(View.GONE, View.VISIBLE);
 
+            // 사진을 촬영하는 실질적인 로직을 매니저 객체가 수행하고 그 반응을 줌
             cameraManager.takePhoto()
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(uri -> {
                         // 사진 촬영 성공, UI 업데이트 등
-                        log("사진 촬영 성공");
-                        cameraManager._savedUri.setValue(uri);
+                        //cameraManager._savedUri.setValue(uri);
+                        saveUri = uri;
                         displayCapturedImageForReview(uri); // 이미지 출력 메서드 호출
-                        cameraManager.currentPhotoFile = photoFileManager.uriToFile(getActivity(), uri);
+
+                        /* 의문이 드는 곳 ! */
+                        //cameraManager.currentPhotoFile = photoFileManager.uriToFile(getActivity(), uri);
 
                     }, error -> {
                         log("사진 처리 실패");
                     });
         });
-
-
         return cameraPreviewDialogBinding.getRoot();
+    }
+
+
+    // 1-3) 사진 촬영 성공 후, 이미지 출력
+    public void displayCapturedImageForReview(Uri imageUri) {
+        // uri 반환받으면, 이를 이용하여 화면에 표시하기 Glide 이용
+        if (cameraPreviewDialogBinding != null && cameraPreviewDialogBinding.imagePreview != null) {
+            ImageView image_preview = cameraPreviewDialogBinding.imagePreview; // 검토용 ImageView
+            Glide.with(getActivity()).load(imageUri).into(image_preview);
+
+            AppCompatButton bt_image_save = cameraPreviewDialogBinding.btImageSave; // 확인 버튼
+            AppCompatButton bt_image_cancel = cameraPreviewDialogBinding.btImageCancel; // 다시시도 버튼
+            AppCompatImageView bt_file_download = cameraPreviewDialogBinding.imagePreview;  // 사진 파일 저장 버튼
+
+
+            // 확인 버튼 --> 지금 캡처된 이미지를 데이터로 쓰겠다 !
+            bt_image_save.setOnClickListener(v -> {
+                File file = photoFileManager.uriToFile(getActivity(), saveUri);
+                saveFile.setValue(file);
+                dismiss();
+            });
+
+
+            bt_image_cancel.setOnClickListener(v -> {
+                setVisibleToButtonLayout(View.VISIBLE, View.GONE);
+            });
+
+
+            // 사진 저장 버튼
+            // 2-1) 매니저에게 실질적인 저장로직 수행
+            bt_file_download.setOnClickListener(v -> {
+                log("/???????");
+                cameraManager.saveImageToGallery(saveUri)
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(() -> {
+                            log("갤러리 저장 성공");
+
+                        }, error -> {
+                            log("사진 저장 실패 * " + error.getMessage());
+                        });
+            });
+        }
     }
 
 
@@ -122,46 +169,6 @@ public class CameraPreviewDialogFragment extends TMDialogFragment {
     }
 
 
-    // 촬영된 이미지 출력
-    public void displayCapturedImageForReview(Uri imageUri) {
-        // uri 반환받으면, 이를 이용하여 화면에 표시하기 Glide 이용
-        if (cameraPreviewDialogBinding != null && cameraPreviewDialogBinding.imagePreview != null) {
-            ImageView image_preview = cameraPreviewDialogBinding.imagePreview; // 검토용 ImageView
-            Glide.with(getActivity()).load(imageUri).into(image_preview);
-
-            AppCompatButton bt_image_save = cameraPreviewDialogBinding.btImageSave; // 확인 버튼
-            AppCompatButton bt_image_cancel = cameraPreviewDialogBinding.btImageCancel; // 다시시도 버튼
-            AppCompatImageView bt_file_download = cameraPreviewDialogBinding.imagePreview;  // 사진 파일 저장 버튼
-
-            // 사진 저장
-            bt_image_save.setOnClickListener(v -> {
-                File file = cameraManager.getCurrentPhotoFile();
-                saveFile.setValue(file);
-                dismiss();
-            });
-
-            bt_image_cancel.setOnClickListener(v -> {
-                setVisibleToButtonLayout(View.VISIBLE, View.GONE);
-            });
-
-
-            // 사진을 별도로 저장하고 싶다면 !
-            bt_file_download.setOnClickListener(v -> {
-                cameraManager.saveImageToGallery()
-                        .subscribeOn(Schedulers.io())
-                        .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe(() -> {
-                            log("갤러리 저장 성공");
-                            saveFileResult.setValue("사진이 저장되었습니다.");
-
-                        }, error -> {
-                            log("사진 저장 실패 * " + error.getMessage());
-                        });
-            });
-        }
-    }
-
-
     private void setVisibleToButtonLayout(int view1, int view2){
         camera_preview_layout.setVisibility(view1);     // 카메라 프리뷰
         image_preview_layout.setVisibility(view2);      // 사진(이미지) 프리뷰
@@ -174,11 +181,9 @@ public class CameraPreviewDialogFragment extends TMDialogFragment {
         cameraPreviewDialogBinding = null;
         camera_preview = null;
         bt_take_photo = null;
-/*        if(cameraManager != null){
+        if(cameraManager != null){
             cameraManager.releaseResources();
         }
-
- */
         this.dismiss();
     }
 

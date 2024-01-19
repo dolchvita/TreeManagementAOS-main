@@ -1,7 +1,5 @@
 package com.snd.app.ui.write.tree;
 
-import android.graphics.Bitmap;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 
@@ -51,8 +49,8 @@ public class RegistTreeBasicInfoViewModel extends TMViewModel{
     public List<File> _currentFileList = new ArrayList<>();  // 서버로 전달할 Multipart 객체
     public MutableLiveData<List<File>> currentFileList = new MutableLiveData<>();  // PhotoAdapter로 전달할 객체
 
-
     public MutableLiveData back = new MutableLiveData<>();
+
     @Inject
     TreeDataListUseCase treeDataListUseCase;
     @Inject
@@ -70,14 +68,6 @@ public class RegistTreeBasicInfoViewModel extends TMViewModel{
 
 
     /* ------------------------------------------------- VIEWS ------------------------------------------------- */
-
-    // 사진 추가하는 메서드
-    /*
-    public void addImageList(Bitmap bitmap) {
-    }
-
-     */
-
 
     public void addImageList2(File file) {
         if(_currentFileList.size() < 2){
@@ -132,9 +122,9 @@ public class RegistTreeBasicInfoViewModel extends TMViewModel{
 
     // 2) 기본 정보 등록 - 어차피 거쳐야 함
     public void initializeTreeBasicInfoForRegister(){
-        // 전달받은 리스트가 있을 경우 그 수만큼 꺼내서 해시태그 매칭하기
         treeUseCase.loadTreeBasicInfo(Authorization.getValue(), treeInitializingDTO);
     }
+
 
     public LiveData<String> checkTreeBasicInfo(){
         return  treeUseCase.checkTreeBasicInfo();

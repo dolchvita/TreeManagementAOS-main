@@ -35,7 +35,9 @@ public class TreeUseCase {
     public void loadTreeBasicInfo(String authorization, TreeInitializingDTO initializingTreeInfo){
         treeRepository.initializeTreeBasicInfoForRegister(authorization, initializingTreeInfo);
     }
+
     public LiveData<String> checkTreeBasicInfo(){
+        // 등록에 대한 결과물 반환
         return  treeRepository.checkTreeBasicInfo;
     }
 
@@ -44,6 +46,7 @@ public class TreeUseCase {
     public void loadSpecificLocationInfo (String authorization, TreeSpecificLocationInfoDTO treeSpecificLocationInfo){
         treeRepository.registerSpecificLocationInfo(authorization, treeSpecificLocationInfo);
     }
+
     public LiveData<String> checkSpecificLocationInfo(){
         return  treeRepository.checkSpecificLocationInfo();
     }

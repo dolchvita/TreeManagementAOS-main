@@ -4,8 +4,6 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.text.Editable;
@@ -22,9 +20,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.AppCompatEditText;
 import androidx.databinding.DataBindingUtil;
-import androidx.lifecycle.Lifecycle;
-import androidx.lifecycle.LifecycleOwner;
-import androidx.lifecycle.LifecycleRegistry;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -78,7 +73,6 @@ public class RegistTreeBasicInfoFragment extends TMFragment implements TreeHasht
     int position = 0;
 
 
-
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -100,19 +94,14 @@ public class RegistTreeBasicInfoFragment extends TMFragment implements TreeHasht
         flexboxLayout = treeBasicInfoActBinding.tlqk;
         treeHashtagCustomAdapter = new TreeHashtagCustomAdapter();
 
+        cameraPreviewDialogFragment = new CameraPreviewDialogFragment();
 
-
-        /* -------------------------------------- CAMERA ------------------------------------------ */
 
         // 사진 수 나타내는 메서드
         TextView textView = treeBasicInfoActBinding.imageCnt;
         treeBasicInfoVM.countText.observe(getActivity(), integer -> {
             String count = getString(R.string.image_count, integer.toString());
             textView.setText(count);
-        });
-
-        treeBasicInfoVM.isImage.observe(getActivity(), s -> {
-            checkPhoto();
         });
 
         photoAdapter();
@@ -149,6 +138,9 @@ public class RegistTreeBasicInfoFragment extends TMFragment implements TreeHasht
             finishProccess();
         });
 
+
+        /* -------------------------------------------- Register -------------------------------------------- */
+
         treeBasicInfoVM.insertProcess.observe(getActivity(), s -> {
             if(s.equals("none")){
                 Toast.makeText(getContext(), "수목명을 입력해주세요", Toast.LENGTH_SHORT).show();
@@ -157,13 +149,18 @@ public class RegistTreeBasicInfoFragment extends TMFragment implements TreeHasht
             }
         });
 
+        treeBasicInfoVM.isImage.observe(getActivity(), s -> {
+            checkPhoto();
+        });
+
         treeBasicInfoVM.checkTreeBasicInfo().observe(getActivity(), s -> {
             if(s.equals("success")){
                 Toast.makeText(getContext(), "수목 기본 정보가 등록되었습니다.", Toast.LENGTH_SHORT).show();
                 ((RegistTreeInfoActivity)getActivity()).num = 1;
                 ((RegistTreeInfoActivity)getActivity()).switchFragment();
+
             }else {
-                Toast.makeText(getContext(), "중복된 칩 이거나,\n 허용되지 않은 칩입니다.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), "네트워크 연결이 원할하지 않습니다.\n기기의 네트워크 연결 상태를 확인하신 후 다시 연결 해주세요.", Toast.LENGTH_SHORT).show();
                 getActivity().finish();
             }
         });
@@ -210,7 +207,7 @@ public class RegistTreeBasicInfoFragment extends TMFragment implements TreeHasht
     }
 
 
-    /* -------------------------------------- PHOTO ------------------------------------------ */
+    /* -------------------------------------- Camera ------------------------------------------ */
 
     private void photoAdapter(){
         photoAdapter = new PhotoAdapter();
@@ -220,25 +217,33 @@ public class RegistTreeBasicInfoFragment extends TMFragment implements TreeHasht
         treeBasicInfoVM.camera.observe(getActivity(), o -> {
             if (photoAdapter != null && photoAdapter.getImageListItemCount() > 1){
                 Toast.makeText(getContext(), "이미지는 최대 2장까지 가능합니다.", Toast.LENGTH_SHORT).show();
+
+
+
+            /* ---------------------------- cameraPreviewDialogFragment ---------------------------- */
             }else {
-                cameraPreviewDialogFragment = new CameraPreviewDialogFragment();
                 cameraPreviewDialogFragment.show(getActivity().getSupportFragmentManager(), "inputDialog");
 
                 if(cameraPreviewDialogFragment != null){
                     cameraPreviewDialogFragment.saveFile.observe(getActivity(), file -> {
                         // File 객체가 넘어올 예정
                         treeBasicInfoVM.addImageList2(file);
-
-                        /*
-                        treeBasicInfoVM.currentFileList.add(file);
-
-                        Bitmap bitmap = BitmapFactory.decodeFile(file.getAbsolutePath());
-                        treeBasicInfoVM.addImageList(bitmap);
-                         */
                     });
-                }
-            }
+
+                    // 2-2) 사진이 저장되었다면 (별도 기기의 사진첩)
+                    cameraPreviewDialogFragment.saveFileResult.observe(getActivity(), s -> {
+                        log("??????" + s);
+                        Toast.makeText(getContext(), s, Toast.LENGTH_SHORT);
+                    });
+
+                }   /*./if */
+
+
+            } /* ./else */
         })/* ./Camera */;
+
+
+
 
 
         /* photoAdapter에서 Bitmap 객체들을 받아서 화면에 렌더링
@@ -246,7 +251,6 @@ public class RegistTreeBasicInfoFragment extends TMFragment implements TreeHasht
         treeBasicInfoVM.currentFileList.observe(getActivity(), files -> {
             photoAdapter.setImageList2(files);
         });
-
 
 
         // 갤러리 추가 버튼
@@ -259,14 +263,11 @@ public class RegistTreeBasicInfoFragment extends TMFragment implements TreeHasht
 
         // 사진 지우는 메서드
         photoAdapter.removeImage.observe(getActivity(), integer -> {
-            // 지워진 결과가 반환되는데? - 왜 하나일까
-            // 요게 문제구먼, 하나밖에 안 들어있음, 렌더링 속도가 느린 건가?
-            log("기본 프레그먼트에서 확인 1 ** " + treeBasicInfoVM._currentFileList);
-            //log("기본 프레그먼트에서 확인 2 ** " + treeBasicInfoVM.currentFileList.getValue());
-            //log("기본 프레그먼트에서 확인 3 ** " + treeBasicInfoVM._currentFileList.get(integer));
+            log("사진 지우고 확인하기 ** " + photoAdapter.imageList2.size());
 
+            //log("기본 프레그먼트에서 확인 1 ** " + treeBasicInfoVM._currentFileList);    // 근데 여기서 개수가 안 맞는다 그거 같은데
             //treeBasicInfoVM._currentFileList.remove(treeBasicInfoVM._currentFileList.get(integer));   // 해당 지우기
-            //treeBasicInfoVM.countText.setValue(treeBasicInfoVM._currentFileList.size());
+            treeBasicInfoVM.countText.setValue(photoAdapter.imageList2.size());
         });
 
     }   /* ./photoAdapter */
@@ -300,7 +301,7 @@ public class RegistTreeBasicInfoFragment extends TMFragment implements TreeHasht
     public void inputSpecies(){
         editText.addTextChangedListener(new TextWatcher() {
             @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {//
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
             }
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
