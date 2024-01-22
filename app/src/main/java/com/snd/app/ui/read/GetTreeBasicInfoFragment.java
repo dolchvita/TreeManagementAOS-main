@@ -44,7 +44,7 @@ import java.util.List;
 
 
 public class GetTreeBasicInfoFragment extends TMFragment implements TreeHashtagDialogFragment.TreeHashtagDialogListener{
-    private final String url = "http://125.143.174.65:9955/images/";
+    private final String url = "https://forestpark.yeoju.go.kr/images/";
     private static final int REQUEST_GALLERY = 102;
     CameraPreviewDialogFragment cameraPreviewDialogFragment;
     GetTreeBasicInfoFrBinding getTreeBasicInfoFrBinding;
@@ -481,7 +481,6 @@ public class GetTreeBasicInfoFragment extends TMFragment implements TreeHashtagD
         }
         showToast(msg);
 
-        // 새로고침
         initFlexlayoutViews((flag) ? edit_get_flexbox_layout : read_get_flexbox_layout);
     }
 

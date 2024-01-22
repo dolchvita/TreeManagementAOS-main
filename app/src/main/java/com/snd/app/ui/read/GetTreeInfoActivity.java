@@ -16,6 +16,7 @@ import androidx.lifecycle.ViewModelProvider;
 import com.snd.app.R;
 import com.snd.app.common.TMActivity;
 import com.snd.app.data.camera.CameraManager;
+import com.snd.app.data.camera.PhotoFileManager;
 import com.snd.app.databinding.ReadActBinding;
 
 import java.io.File;
@@ -26,7 +27,7 @@ public class GetTreeInfoActivity extends TMActivity {
     Spinner spinner;
     GetTreeBasicInfoFragment getTreeBasicInfoFr;
     GetTreeBasicInfoViewModel getTreeBasicInfoVM;
-    CameraManager cameraManager;
+    PhotoFileManager photoFileManager;
 
 
     @Override
@@ -39,6 +40,7 @@ public class GetTreeInfoActivity extends TMActivity {
         getSupportFragmentManager().beginTransaction().replace(R.id.read_content, new NfcReadFragment()).commit();
         getTreeBasicInfoFr = new GetTreeBasicInfoFragment();
         getTreeBasicInfoVM = new ViewModelProvider(this).get(GetTreeBasicInfoViewModel.class);
+        photoFileManager = new PhotoFileManager();
 
         // 스피너 설정
         spinner = findViewById(R.id.read_sipnner);
@@ -46,7 +48,6 @@ public class GetTreeInfoActivity extends TMActivity {
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(adapter);
 
-        cameraManager = new CameraManager(this);
     }// ./onCreate
 
 
@@ -56,6 +57,7 @@ public class GetTreeInfoActivity extends TMActivity {
         getTreeInfoVM.back.observe(this, s -> {
             back();
         });
+
         getTreeInfoVM.fragmentPageName.observe(this, s -> {
             switchFragment(s);
         });
@@ -94,14 +96,9 @@ public class GetTreeInfoActivity extends TMActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == REQUEST_GALLERY && resultCode == Activity.RESULT_OK && data != null) {
             Uri selectedImageUri = data.getData();
-            //Log.d(TAG, "여기서 받니~?? ** " + selectedImageUri);     // content://media/external/images/media/1000001473
 
-            // 잠시 막기 (갤러리 적용시 필요함)
-            /*
-            File file = cameraManager.uriToFile(this, selectedImageUri);
+            File file = photoFileManager.uriToFile(this, selectedImageUri);
             getTreeBasicInfoVM.addImageList(file);
-
-             */
         }
     }
 
@@ -110,10 +107,7 @@ public class GetTreeInfoActivity extends TMActivity {
     protected void onDestroy() {
         super.onDestroy();
         getTreeBasicInfoFr = null;
-        if (cameraManager != null) {
-            cameraManager.releaseResources();
-        }
-        cameraManager = null;
+        photoFileManager = null;
     }
 
 

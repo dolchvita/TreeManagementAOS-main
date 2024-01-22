@@ -180,7 +180,7 @@ public class GetEnvironmentFragment extends TMFragment {
 
     private void initBoundaryStone(){   // 경계석 유무
         boundaryStone_spinner = getEnvironmentInfoFrBinding.getBoundaryStoneTvState;
-        ArrayAdapter adapter = ArrayAdapter.createFromResource(getContext(), R.array.treeStatus_pest, android.R.layout.simple_spinner_item);
+        ArrayAdapter adapter = ArrayAdapter.createFromResource(getContext(), R.array.treeStatus_pest_edit, android.R.layout.simple_spinner_item);
         boundaryStone_spinner.setAdapter(adapter);
     }
 

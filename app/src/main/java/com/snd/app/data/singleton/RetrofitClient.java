@@ -10,7 +10,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class RetrofitClient {
     public static String TAG = "RetrofitClient";
-    private static final String BASE_URL = "http://125.143.174.65:9955/";
+    private static final String BASE_URL = "https://forestpark.yeoju.go.kr/";
     private static Retrofit retrofit;
 
     public static Retrofit getInstance(String authorization) {

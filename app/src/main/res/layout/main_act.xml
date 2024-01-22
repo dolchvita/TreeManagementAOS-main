@@ -53,7 +53,7 @@
             android:id="@+id/title"
             style="@style/headerTextStyle"
             android:elevation="0dp"
-            android:text="수목관리시스템 v.1.0.8"
+            android:text="수목관리시스템 v.1.0.9"
             android:textColor="@color/cocoa_brown"
             app:layout_constraintStart_toStartOf="@id/header"
             app:layout_constraintTop_toTopOf="@id/header"

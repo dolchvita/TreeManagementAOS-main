@@ -241,7 +241,7 @@ public class MapLoadingFragment extends TMFragment {
         locationRepository.getSatellites().observe(getActivity(), new Observer<Integer>() {
             @Override
             public void onChanged(Integer satellites) {
-                if (locationRepository != null && satellites > 1 && satellites < 500){
+                if (locationRepository != null && satellites > 15 && satellites < 500){
                     mapLoadingVM.satellite.set(satellites.toString());
                     locationRepository.checkLocationAccuracy();
                 }

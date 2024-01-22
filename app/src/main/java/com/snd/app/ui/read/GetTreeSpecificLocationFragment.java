@@ -154,7 +154,6 @@ public class GetTreeSpecificLocationFragment extends TMFragment {
    private void initTreeIntegratedVO(){
        singletonVO.treeIntegratedVO.observe(getViewLifecycleOwner(), treeIntegratedVO -> {
            getTreeSpecificLocationVM.Authorization = Authorization;
-
            if(treeIntegratedVO != null){
                getTreeSpecificLocationVM.setTextView(treeIntegratedVO);
                mapViewManager.addMarkers(treeIntegratedVO.getLatitude(), treeIntegratedVO.getLongitude(), idHex);

@@ -213,6 +213,7 @@ public class CameraManager {
     public void releaseResources(){
         if (cameraProvider != null) {
             cameraProvider.unbindAll();
+            cameraProvider = null;
         }
         camera = null;
         imageCapture = null;

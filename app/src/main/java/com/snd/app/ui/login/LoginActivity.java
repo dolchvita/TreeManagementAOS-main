@@ -28,7 +28,7 @@ import com.snd.app.ui.user.RegisterActivity;
 
 public class LoginActivity extends TMActivity {
     MainLoginBinding mainLoginBinding;
-    private String APK_VERSION = "1.0.8";       // 안드로이드 스튜디오 전역에서 참조 가능한 문자열이 있지 않을까? (xml, java)
+    private String APK_VERSION = "1.0.9";       // 안드로이드 스튜디오 전역에서 참조 가능한 문자열이 있지 않을까? (xml, java)
     AlertDialog dialog;
     SharedPreferenceManager sharedPreferenceManager;
     UserCredentialsVO userCredentialsVO;
@@ -116,8 +116,6 @@ public class LoginActivity extends TMActivity {
 
 
         loginVM.getUserDTO().observe(this, userDTO -> {
-            log("유저 콜백 ** " +userDTO);
-
             saveUserInfo(userDTO);
         });
 

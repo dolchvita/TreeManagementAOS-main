@@ -142,7 +142,7 @@
             android:id="@+id/no_history_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="TreeManagementAOS ver.1.0.8 \n Copyright(C) 2023 주식회사 이공이공. All rights reserved."
+            android:text="TreeManagementAOS ver.1.0.9 \n Copyright(C) 2023 주식회사 이공이공. All rights reserved."
             android:textSize="10dp"
             android:gravity="center"
             app:layout_constraintTop_toTopOf="@+id/footer"

@@ -53,6 +53,7 @@ public class CameraPreviewDialogFragment extends TMDialogFragment {
     PhotoFileManager photoFileManager;
     private Uri saveUri;
 
+    AppCompatButton bt_image_cancel;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -88,6 +89,9 @@ public class CameraPreviewDialogFragment extends TMDialogFragment {
         });
 
 
+        bt_image_cancel = cameraPreviewDialogBinding.btImageCancel; // 다시시도 버튼
+
+
         // 1-1) 사진 촬영 - 멀티 스레딩 기법 적용
         cameraPreviewDialogVM.onCameraBt.observe(getActivity(), s -> {
             setVisibleToButtonLayout(View.GONE, View.VISIBLE);
@@ -105,6 +109,14 @@ public class CameraPreviewDialogFragment extends TMDialogFragment {
                         log("사진 처리 실패");
                     });
         });
+
+
+        bt_image_cancel.setOnClickListener(v -> {
+            dismiss();
+            log("다시시도 버튼 **");
+        });
+
+
         return cameraPreviewDialogBinding.getRoot();
     }
 
@@ -117,7 +129,6 @@ public class CameraPreviewDialogFragment extends TMDialogFragment {
             Glide.with(getActivity()).load(imageUri).into(image_preview);
 
             AppCompatButton bt_image_save = cameraPreviewDialogBinding.btImageSave; // 확인 버튼
-            AppCompatButton bt_image_cancel = cameraPreviewDialogBinding.btImageCancel; // 다시시도 버튼
             AppCompatImageView bt_file_download = cameraPreviewDialogBinding.imagePreview;  // 사진 파일 저장 버튼
 
 
@@ -128,11 +139,6 @@ public class CameraPreviewDialogFragment extends TMDialogFragment {
 
                 cameraManager.releaseResources();
                 dismiss();
-            });
-
-
-            bt_image_cancel.setOnClickListener(v -> {
-                this.dismiss();
             });
 
 
@@ -182,7 +188,7 @@ public class CameraPreviewDialogFragment extends TMDialogFragment {
         if(cameraManager != null){
             cameraManager.releaseResources();
         }
-        this.dismiss();
+        dismiss();
     }
 
 

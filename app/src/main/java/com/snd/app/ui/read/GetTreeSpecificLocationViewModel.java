@@ -68,15 +68,11 @@ public class GetTreeSpecificLocationViewModel extends TMViewModel {
 
     public void onSidewalkItemSelected(AdapterView<?> parent, View view, int position, long id) {
         String item = (String) parent.getItemAtPosition(position);
-        log("돼지 새끼 존나 웅앵거리네 ** " + item);
-
         if(item.equals("있음 O")){
             treeLocationInfoDTO.setSidewalk(true);
         } else if (item.equals("없음 X")) {
             treeLocationInfoDTO.setSidewalk(false);
         }
-
-        log("onSidewalkItemSelected 호츌" + item);
     }
 
 
@@ -123,7 +119,9 @@ public class GetTreeSpecificLocationViewModel extends TMViewModel {
             treeLocationInfoDTO = new TreeLocationInfoDTO();
         }
         treeLocationInfoDTO.setNfc(treeIntegratedVO.getNfc());
-        treeLocationInfoDTO.setSidewalk(treeIntegratedVO.getSidewalk());    // 보도유무
+        if(treeIntegratedVO.getSidewalk() != null){
+            treeLocationInfoDTO.setSidewalk(treeIntegratedVO.getSidewalk());    // 보도 유무
+        }
         treeLocationInfoDTO.setLatitude(treeIntegratedVO.getLatitude());
         treeLocationInfoDTO.setLongitude(treeIntegratedVO.getLongitude());
         treeLocationInfoDTO.setSubmitter(treeIntegratedVO.getLocationSubmitter());

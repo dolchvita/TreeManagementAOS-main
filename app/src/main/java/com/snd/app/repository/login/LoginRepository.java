@@ -43,7 +43,7 @@ public class LoginRepository {
     public void appLoginRequest(UserCredentialsVO userCredentialsVO) {
         Log.d(TAG, "로그인 시도 " + userCredentialsVO);
         retrofit = new Retrofit.Builder()
-                .baseUrl("http://125.143.174.65:9955/")
+                .baseUrl("https://forestpark.yeoju.go.kr/")
                 .addConverterFactory(GsonConverterFactory.create())
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create()) // 추가
                 .build();

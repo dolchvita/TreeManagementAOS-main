@@ -76,8 +76,8 @@ public class RegistTreeInfoActivity extends TMActivity implements MapView.POIIte
 
 
     public void initMapLoadingFr(){
-        //getSupportFragmentManager().beginTransaction().replace(R.id.write_content, new MapLoadingFragment()).commit();
-        getSupportFragmentManager().beginTransaction().replace(R.id.write_content, registTreeBasicInfoFr).commit();
+        getSupportFragmentManager().beginTransaction().replace(R.id.write_content, new MapLoadingFragment()).commit();
+        //getSupportFragmentManager().beginTransaction().replace(R.id.write_content, registTreeBasicInfoFr).commit();
     }
 
 
@@ -99,9 +99,7 @@ public class RegistTreeInfoActivity extends TMActivity implements MapView.POIIte
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == REQUEST_GALLERY && resultCode == Activity.RESULT_OK && data != null) {
             Uri selectedImageUri = data.getData();
-            // 테스트 위해 잠시 막긍
 
-            // 아 이거 모듈화 각인데
             file = photoFileManager.uriToFile(this, selectedImageUri);
             treeBasicInfoVM.addImageList2(file);
         }

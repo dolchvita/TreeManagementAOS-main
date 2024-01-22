@@ -171,7 +171,7 @@ public class LocationRepository {
                 for (Location location : locationResult.getLocations()) {
                     _accuracy.setValue(location.getAccuracy());
 
-                    if (location.getAccuracy() <= 1000) {  // 오차 범위가 10미터 이내인 경우
+                    if (location.getAccuracy() <= 10) {  // 오차 범위가 10미터 이내인 경우
                         Log.d(TAG, "Location with good accuracy: " + location.getLatitude() + ", " + location.getLongitude());
 
                         Double latitude = location.getLatitude();

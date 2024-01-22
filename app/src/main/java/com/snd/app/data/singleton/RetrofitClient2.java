@@ -8,7 +8,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 // 권한 토큰 없이 서버 통신하기 위한 객체
 public class RetrofitClient2 {
-    private static final String BASE_URL = "http://125.143.174.65:9955/";
+    private static final String BASE_URL = "https://forestpark.yeoju.go.kr/";
     private static Retrofit retrofit;
 
     public static Retrofit getInstance() {

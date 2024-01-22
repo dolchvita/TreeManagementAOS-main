@@ -117,7 +117,11 @@ public class GetEnvironmentViewModel extends TMViewModel {
     // 경계석 스피너 선택
     public void onBoundaryStoneItemSelected(AdapterView<?> parent, View view, int position, long id) {
         String item = (String)parent.getItemAtPosition(position);
-        treeEnvironmentInfoDTO.setBoundaryStone(item.equals("있음 O") ? true : false);
+        if(item.equals("있음 O")){
+            treeEnvironmentInfoDTO.setBoundaryStone(true);
+        } else if (item.equals("없음 X")) {
+            treeEnvironmentInfoDTO.setBoundaryStone(false);
+        }
     }
 
 
@@ -167,6 +171,9 @@ public class GetEnvironmentViewModel extends TMViewModel {
             treeEnvironmentInfoDTO = new TreeEnvironmentInfoDTO();
         }
         treeEnvironmentInfoDTO.setNfc(treeIntegratedVO.getNfc());
+        if(treeIntegratedVO.getBoundaryStone() != null){
+            treeEnvironmentInfoDTO.setBoundaryStone(treeIntegratedVO.getBoundaryStone());   // 경계석 유무
+        }
         treeEnvironmentInfoDTO.setSubmitter(treeIntegratedVO.getBasicSubmitter());
         treeEnvironmentInfoDTO.setVendor(treeIntegratedVO.getBasicVendor());
         treeEnvironmentInfoDTO.setFrameMaterial(treeIntegratedVO.getFrameMaterial());
