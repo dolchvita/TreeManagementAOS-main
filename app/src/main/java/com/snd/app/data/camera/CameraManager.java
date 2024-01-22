@@ -163,7 +163,18 @@ public class CameraManager {
                             }
                             @Override
                             public void onError(@NonNull ImageCaptureException exception) {
+
+                                /*
+                                if (exception.getImageCaptureError() == ImageCapture.ERROR_IMAGE_CAPTURE_FAILED) {
+                                    text_no_image.setText("Failed to capture image. Please try again.");
+                                } else {
+                                    text_no_image.setText("An error occurred while capturing the image.");
+                                }
+
+                                 */
+                                //log("Image capture failed: " + exception.getMessage());
                                 emitter.onError(exception);
+
                             }
                         });
             }

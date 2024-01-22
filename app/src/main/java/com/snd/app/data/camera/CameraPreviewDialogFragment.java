@@ -54,6 +54,7 @@ public class CameraPreviewDialogFragment extends TMDialogFragment {
     private Uri saveUri;
 
     AppCompatButton bt_image_cancel;
+    AppCompatTextView text_no_image;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -65,6 +66,8 @@ public class CameraPreviewDialogFragment extends TMDialogFragment {
         cameraPreviewDialogBinding.setVm(cameraPreviewDialogVM);
         camera_preview = cameraPreviewDialogBinding.cameraPreview;
         bt_take_photo = cameraPreviewDialogBinding.btTakePhoto;
+        text_no_image = cameraPreviewDialogBinding.textNoImage;
+
         /* Preview */
         camera_preview_layout = cameraPreviewDialogBinding.cameraPreviewLayout;
         image_preview_layout = cameraPreviewDialogBinding.imagePreviewLayout;
@@ -88,7 +91,7 @@ public class CameraPreviewDialogFragment extends TMDialogFragment {
             }
         });
 
-
+        text_no_image.setText("사진이 로딩 중입니다.\n잠시만 기다려주세요.");
         bt_image_cancel = cameraPreviewDialogBinding.btImageCancel; // 다시시도 버튼
 
 
@@ -96,6 +99,7 @@ public class CameraPreviewDialogFragment extends TMDialogFragment {
         cameraPreviewDialogVM.onCameraBt.observe(getActivity(), s -> {
             setVisibleToButtonLayout(View.GONE, View.VISIBLE);
             // 사진을 촬영하는 실질적인 로직을 매니저 객체가 수행하고 그 반응을 줌
+
             cameraManager.takePhoto()
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
@@ -106,6 +110,9 @@ public class CameraPreviewDialogFragment extends TMDialogFragment {
                         displayCapturedImageForReview(uri); // 이미지 출력 메서드 호출
 
                     }, error -> {
+                        text_no_image.setText("네트워크가 원활하지 않습니다\n다시 시도해주세요");
+
+                        //
                         log("사진 처리 실패");
                     });
         });
